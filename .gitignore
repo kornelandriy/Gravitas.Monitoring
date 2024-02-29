@@ -261,3 +261,5 @@ __pycache__/
 *.pyc
 Gravitas.PreRegistration.Web/angularClient/pre-registration/dist/
 DashboardAngularUI/package-lock.json
+
+/wwwroot/lib/
