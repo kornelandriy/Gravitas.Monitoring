@@ -1,5 +1,8 @@
 ﻿@page
+@using Gravitas.Monitoring.Constants
 @model IndexModel
+@inject SignInManager<IdentityUser> SignInManager
+
 @{
     ViewData["Title"] = "Home page";
 }
@@ -7,4 +10,19 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole(UserRoles.Admin))
+        {
+            <div>
+                <a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для адміна</a>
+            </div>
+        }
+        
+        @if (User.IsInRole(UserRoles.User))
+        {
+            <a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для простого користувача</a>
+        }
+    }
 </div>

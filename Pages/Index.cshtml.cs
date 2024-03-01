@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace Gravitas.Monitoring.Pages
 {
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
@@ -14,7 +16,6 @@ namespace Gravitas.Monitoring.Pages
 
         public void OnGet()
         {
-
         }
     }
 }
