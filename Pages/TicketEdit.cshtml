@@ -1,0 +1,29 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.TicketEditModel
+@using Gravitas.Monitoring.HelpClasses
+@{
+	string t = HttpContext.Request.Query["t"].ToString();
+
+	List<string[]> tmp = new List<string[]>();
+	
+	
+	string sql = "";
+	if (db.EnterpriseNum == 0) sql = "select StatusId, RoutetemplateId, RouteItemIndex, SecondaryRouteTemplateId, SecondaryRouteItemIndex, TicketContainerId from dbo.Tickets where Id = '" + t + "'";
+	if (db.EnterpriseNum == 1) sql = "select StatusId, RoutetemplateId, RouteItemIndex, SecondaryRouteTemplateId, SecondaryRouteItemIndex, ContainerId from dbo.Ticket where Id = '" + t + "'";
+	db.GetDataFromDBMSSQL(sql, ref tmp);
+
+
+}
+<form action="./TicketSaver">
+	<input type="hidden" name="tc" value="@tmp[0][5]" />
+	<input type="hidden" name="t" value="@t" />
+	<table>
+		<tr><td style="text-align: right;">Статус</td><td><input type="text" name="StateId" value="@tmp[0][0]" /></td></tr>
+		<tr><td style="text-align: right;">Маршрут</td><td><input type="text" name="RT" value="@tmp[0][1]" /></td></tr>
+		<tr><td style="text-align: right;">Етап</td><td><input type="text" name="RII" value="@tmp[0][2]" /></td></tr>
+		<tr><td style="text-align: right;">Доп. маршрут</td><td><input type="text" name="SRT" value="@tmp[0][3]" placeholder="NULL" /></td></tr>
+		<tr><td style="text-align: right;">Доп. Етап</td><td><input type="text" name="SRII" value="@tmp[0][4]" /></td></tr>
+		<tr><td colspan="2" style="text-align: center;"><button class="btn btn-primary" style="width: 100%">Зберегти</button></td></tr>
+		<tr><td colspan="2" style="text-align: center;"><a href="./CarInfo?tc=@tmp[0][5]" class="btn btn-primary" style="width: 100%">Назад до опису авто</a></td></tr>
+	</table>
+</form>

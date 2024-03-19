@@ -58,6 +58,31 @@
   --bs-body-bg: #fff;
 }
 
+
+/* #################### Yozheg style ############################################################################################################################## */
+
+.yozhstyle1 .brdrradshad {
+    border: 1px solid #b9b9b9;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 12px 12px 2px 1px rgba(20, 20, 20, .1);
+}
+
+.brdr1sb {
+    border: 1px solid #b9b9b9;
+}
+
+.headercolor {
+    background: #d9d9d9;
+}
+
+.hvr:hover {
+    background: #dc3545;
+}
+
+/* #################### Yozheg style ############################################################################################################################## */
+
+
 *,
 *::before,
 *::after {

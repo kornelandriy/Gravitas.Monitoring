@@ -1,0 +1,98 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.CarInfoModel
+@using Gravitas.Monitoring.HelpClasses
+@{
+	string RouteTemplate = "";
+	string LastRouteItem = "";
+	string LastNode = "";
+
+
+	string tc = HttpContext.Request.Query["tc"].ToString();
+
+
+	string CarCards = "";
+
+	//####################################################################################
+
+	List<string[]> cards = new List<string[]>();
+
+	List<string[]> lst1 = new List<string[]>(); // 2
+	List<string[]> lst2 = new List<string[]>(); // 3
+	List<string[]> lst3 = new List<string[]>(); // 4
+
+	try
+	{
+		if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Cards where TicketContainerId = " + tc, ref cards);
+		if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select * from dbo.Card where TicketContainerId = " + tc, ref cards);
+
+		foreach (string[] s in cards)
+		{
+			switch (s[1])
+			{
+				case "2":
+					lst1.Add(new string[] { s[2], s[0] }); // "Картка водія"
+					break;
+				case "3":
+					lst2.Add(new string[] { s[2], s[0] }); // "Мітка авто"
+					break;
+				case "4":
+					lst3.Add(new string[] { s[2], s[0] }); // "Картка лотка"
+					break;
+			}
+		}
+
+		string st = "<b>Картки і мітки</b><br /><table class=\"yozhstyle1\">";
+		st += "<tr><td colspan=\"3\" class=\"brdr1sb headercolor\">Картка водія</td></tr>";
+		foreach (string[] s in lst1)
+			st += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td></tr>";
+		//st += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\"><a href=\"./CardInfo?CardId=" + s[1] + "&tc=" + tc + "\" class=\"btn btn-primary\">&raquo;</a></td></tr>";
+		st += "<tr><td colspan=\"3\" class=\"brdr1sb headercolor\">Мітка авто</td></tr>";
+		foreach (string[] s in lst2)
+			st += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td></tr>";
+		//st += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\"><a href=\"./CardInfo?CardId=" + s[1] + "&tc=" + tc + "\" class=\"btn btn-primary\">&raquo;</a></td></tr>";
+		st += "<tr><td colspan=\"3\" class=\"brdr1sb headercolor\">Картка лотка</td></tr>";
+		foreach (string[] s in lst3)
+			st += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td></tr>";
+		//st += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\"><a href=\"./CardInfo?CardId=" + s[1] + "&tc=" + tc + "\" class=\"btn btn-primary\">&raquo;</a></td></tr>";
+		st += "</table>";
+		CarCards = st;
+	}
+	catch { CarCards = "Не вдалося отримати дані про картки..."; }
+
+	//####################################################################################
+
+	List<string[]> tmp = new List<string[]>();
+	if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Tickets where TicketContainerId = '" + tc + "'", ref tmp);
+	if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select * from dbo.Ticket where ContainerId = '" + tc + "'", ref tmp);
+	//
+	if (db.EnterpriseNum == 0) RouteTemplate = tmp[0][6];
+	if (db.EnterpriseNum == 1) RouteTemplate = tmp[0][4];
+	//
+	if (db.EnterpriseNum == 0) LastRouteItem = tmp[0][7];
+	if (db.EnterpriseNum == 1) LastRouteItem = tmp[0][5];
+	//
+	if (db.EnterpriseNum == 0) LastNode = tmp[0][9];
+	if (db.EnterpriseNum == 1) LastNode = tmp[0][9];
+
+	string sRoute = carinfohelper.ShowRoute(RouteTemplate, LastRouteItem, LastNode, tmp[0][0], tc) + "<br />";
+
+	//####################################################################################
+
+	string sNodes = carinfohelper.GetNodeDataByTC(tc);
+
+	//####################################################################################
+
+	string sTickets = carinfohelper.GetTickets();
+
+	//####################################################################################
+
+}
+<a href="./CarList" class="btn btn-primary">Назад до списку авто</a>
+<br />
+<br />
+@Html.Raw(CarCards)
+@Html.Raw(sRoute)
+@Html.Raw(sNodes)
+@Html.Raw(sTickets)
+<br />
+<a href="./CarList" class="btn btn-primary">Назад до списку авто</a>

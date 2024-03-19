@@ -1,0 +1,76 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.CardListModel
+@using Gravitas.Monitoring.HelpClasses
+@{
+	List<string[]> lst = new List<string[]>();
+	string CurCardType = "";
+	string CurFindType = "";
+	//
+	string CardType = HttpContext.Request.Query["CardType"].ToString();
+	CurCardType = CardType;
+	if (CardType == "") CardType = "0";
+	string[] ct = new string[] { "", "", "", "", "" };
+	ct[int.Parse(CardType)] = "checked";
+	//
+	string FindBy = HttpContext.Request.Query["FindBy"].ToString(); //   num    id
+	string ft1 = "";
+	string ft2 = "";
+	if (FindBy == "") { ft1 = ""; ft2 = ""; CurFindType = ""; }
+	if (FindBy == "num") { ft1 = "checked"; ft2 = ""; CurFindType = "num"; }
+	if (FindBy == "id") { ft2 = "checked"; ft1 = ""; CurFindType = "id"; }
+	//
+	string FindWhat = HttpContext.Request.Query["FindWhat"].ToString();
+	//
+	string sql = "";
+	string Selected = "";
+	string SelectFilter = "Id, No, IsActive, TicketContainerId, EmployeeId";
+
+	if (CurCardType != "" && CurFindType != "")
+	{
+		if (db.EnterpriseNum == 0)
+		{
+			if (CurFindType == "num") sql = "select " + SelectFilter + " from dbo.Cards where TypeId = '" + CurCardType + "' and No like N'%" + FindWhat + "%' ";
+			if (CurFindType == "id") sql = "select " + SelectFilter + " from dbo.Cards where Id='" + FindWhat + "' ";
+		}
+		if (db.EnterpriseNum == 1)
+		{
+			if (CurFindType == "num") sql = "select " + SelectFilter + " from dbo.Card where TypeId = '" + CurCardType + "' and No like N'%" + FindWhat + "%' ";
+			if (CurFindType == "id") sql = "select " + SelectFilter + " from dbo.Card where Id='" + FindWhat + "' ";
+		}
+		db.GetDataFromDBMSSQL(sql, ref lst);
+		//
+		Selected = "<table class=\"yozhstyle1\">";
+		Selected += "<tr><th class=\"brdr1sb headercolor\">Ідентифікатор</th><th class=\"brdr1sb headercolor\">Номер</th><th class=\"brdr1sb headercolor\">Стан</th><th class=\"brdr1sb headercolor\">Тікет контейнер</th><th class=\"brdr1sb headercolor\">Користувач</th></tr>";
+		foreach (string[] s in lst)
+		{
+			Selected += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\">" + s[2] + "</td><td class=\"brdr1sb\">" + s[3] + "</td><td class=\"brdr1sb\">" + s[4] + "</td><td><a class=\"btn btn-primary\" href=\"./CardInfo?CardId="+s[0]+"\">🖍️</a></td></tr>";
+		}
+		Selected += "</table";
+	}
+}
+Пошук по ідентифікатору ігнорує тип картки<br /><br />
+<form>
+	<table>
+		<tr><th colspan="2" class="headercolor">Тип картки</th></tr>
+		<tr>
+			<td><fieldset><label style="padding-right: 7px;"><input style="padding-right: 3px;" type="radio" name="CardType" value="1" @ct[1] /> 1 - Користувач</label></td>
+			<td><label style="padding-right: 7px;"><input style="padding-right: 3px;" type="radio" name="CardType" value="2" @ct[2] /> 2 - Водій</label></td>
+		</tr>
+		<tr>
+			<td><label style="padding-right: 7px;"><input style="padding-right: 3px;" type="radio" name="CardType" value="3" @ct[3] /> 3 - Мітка</label></td>
+			<td><label style="padding-right: 7px;"><input style="padding-right: 3px;" type="radio" name="CardType" value="4" @ct[4] /> 4 - Лоток</label></fieldset></td>
+		</tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+		<tr><th colspan="2" class="headercolor">Пошук по:</th></tr>
+		<tr>
+			<td><fieldset><label style="padding-right: 7px;"><input style="padding-right: 3px;" type="radio" name="FindBy" value="num" @ft1 /> Номер</label></td>
+			<td><label style="padding-right: 7px;"><input style="padding-right: 3px;" type="radio" name="FindBy" value="id" @ft2 /> Ідентифікатор</label></fieldset></td>
+		</tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+		<tr><td colspan="2" class="headercolor"><input style="width: 300px;" type="text" name="FindWhat" value="@FindWhat" placeholder="NULL" /></td></tr>
+		<tr><td colspan="2" class="headercolor"><button style="width: 300px;" class="btn btn-success">Знайти</button></td></tr>
+	</table>
+</form>
+<br />
+@lst.Count
+@Html.Raw(Selected)

@@ -1,0 +1,38 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.ChangeStateIdModel
+@using Gravitas.Monitoring.HelpClasses
+@{
+	string id = HttpContext.Request.Query["id"].ToString();
+	string StateId = HttpContext.Request.Query["StateId"].ToString();
+	string tc = HttpContext.Request.Query["tc"].ToString();
+	string TableName = HttpContext.Request.Query["TableName"].ToString();
+	string NodeName = HttpContext.Request.Query["NodeName"].ToString();
+
+	//##########################################################################################
+
+	string S = carinfohelper.GetNodeStatus(StateId);
+
+
+	// 1 - 6      10 - 15
+	string Menu = "<table clas\"yozhstyle1\"><tr><td><center>";
+
+	for (int i = 1; i < 7; i++)
+	{
+		Menu += "<a href=\"./SetNewStateId?id=" + id + "&StateId=" + i + "&tc=" + tc + "&TableName=" + TableName + "\" class=\"btn btn-primary\">" + carinfohelper.GetNodeStatus("" + i) + "</a><br /><br />";
+	}
+	Menu += "</center></td><td><center>";
+	for (int i = 10; i < 16; i++)
+	{
+		Menu += "<a href=\"./SetNewStateId?id=" + id + "&StateId=" + i + "&tc=" + tc + "&TableName=" + TableName + "\" class=\"btn btn-primary\">" + carinfohelper.GetNodeStatus("" + i) + "</a><br /><br />";
+	}
+	Menu += "</center></td></tr></table>";
+}
+<div class="text-center">
+	<center>
+		Виберіть новий стан для <b>@NodeName</b> <br /> Поточний статус: <b>@S</b>
+		<br /><br />
+		@Html.Raw(Menu)
+		<br /><a href="./CarInfo?tc=@tc" class="btn btn-primary">Назад до інформації про авто</a>
+	</center>
+
+</div>

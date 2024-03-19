@@ -1,0 +1,40 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.CardInfoModel
+@using Gravitas.Monitoring.HelpClasses
+@{
+	string CardId = HttpContext.Request.Query["CardId"].ToString();
+	string GoBackTC = HttpContext.Request.Query["tc"].ToString();
+	List<string[]> tmp = new List<string[]>();
+	if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Cards where Id = '" + CardId + "'", ref tmp);
+	if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select * from dbo.Card where Id = '" + CardId + "'", ref tmp);
+
+	string tc = "";
+	string UserId = "";
+
+	if (db.EnterpriseNum == 0)
+	{
+		tc = tmp[0][5];
+		UserId = tmp[0][4];
+	}
+
+	if (db.EnterpriseNum == 1)
+	{
+		tc = tmp[0][4];
+		UserId = tmp[0][5];
+	}
+
+	string gb = "";
+	if (GoBackTC != "")
+		gb = "<a href=\"./CarInfo?tc=" + GoBackTC + "\" class=\"btn btn-primary\">Назад до опису авто</a>";
+	else
+		gb = "<a href=\"./CardList?CardType=1&FindBy=id&FindWhat=" + CardId + "\" class=\"btn btn-primary\">Назад до списку карток</a>";
+
+}
+<form action="~/SaveCardData">
+	<input type="hidden" name="CardId" value="@CardId" /><br />
+	<label>Id картки: <b>@CardId</b></label><br /><br />
+	<label>Тікет контейнер <input style="width: 100px;" type="text" name="tc" value="@tc" placeholder="NULL" /></label><br /><br />
+	<label>ID користувача <input style="width: 400px;" type="text" name="UserId" value="@UserId" placeholder="NULL" /></label><br /><br />
+	<button class="btn btn-success">Зберегти</button>
+</form>
+<br />@Html.Raw(gb)

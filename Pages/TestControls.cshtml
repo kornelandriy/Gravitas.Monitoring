@@ -1,0 +1,17 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.TestControlsModel
+@{
+	string f = HttpContext.Request.Query["chk"].ToString();
+
+	string r = "";
+
+	if (f == null) r = "f is null"; else r = "f not null";
+
+	r += "\r\nf.Length = " + f.Length;
+}
+@r
+<br />
+<form>
+	<label><input type="checkbox" name="chk" />chk</label>
+	<button>Button</button>
+</form>

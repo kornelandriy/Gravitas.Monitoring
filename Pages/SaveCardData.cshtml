@@ -1,0 +1,47 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.SaveCardDataModel
+@using Gravitas.Monitoring.HelpClasses
+@using Gravitas.Monitoring.Constants
+@inject SignInManager<IdentityUser> SignInManager
+@{
+	string CardId = HttpContext.Request.Query["CardId"].ToString();
+	string tc = HttpContext.Request.Query["tc"].ToString();
+	string GoBackTC = tc;
+	if (tc == "") tc = "NULL"; else tc = "'" + tc + "'";
+	string UserId = HttpContext.Request.Query["UserId"].ToString();
+	if (UserId == "") UserId = "NULL"; else UserId = "'" + UserId + "'";
+	string sql = "";
+	//
+	if (db.EnterpriseNum == 0) sql = "update dbo.Cards set TicketContainerId=" + tc + ", EmployeeId=" + UserId + " where Id = '" + CardId + "'";
+	if (db.EnterpriseNum == 1) sql = "update dbo.Card set TicketContainerId=" + tc + ", EmployeeId=" + UserId + " where Id = '" + CardId + "'";
+	//
+	string Result = "";
+	if (SignInManager.IsSignedIn(User))
+	{
+		//if (User.IsInRole(UserRoles.Admin))
+		//{
+		try
+		{
+			db.SendRequestToDB(sql);
+			Result = "Виконано...";
+		}
+		catch (Exception ex)
+		{
+			Result = "Помилка: " + ex.ToString();
+		}
+		//log.Add()
+		//}
+		//else
+		//{
+		//	Result = "Помилка: Для виконання дфї не достатньо прав...";
+		//}
+	}
+	else
+	{
+		Result = "Помилка: Користувач не авторизований...";
+	}
+	string gb = "<a href=\"./CardList?CardType=1&FindBy=id&FindWhat=" + CardId + "\" class=\"btn btn-primary\">Назад до списку карток</a>";
+}
+@Result
+<br />
+@Html.Raw(gb)

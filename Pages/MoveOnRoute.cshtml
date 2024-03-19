@@ -1,0 +1,45 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.MoveOnRouteModel
+@using Gravitas.Monitoring.HelpClasses
+@using Gravitas.Monitoring.Constants
+@inject SignInManager<IdentityUser> SignInManager
+@{
+	string t = HttpContext.Request.Query["t"].ToString();
+	string RouteItem = HttpContext.Request.Query["RouteItem"].ToString();
+	string GoBackTC = HttpContext.Request.Query["tc"].ToString();
+	string sql = "";
+	if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set RouteItemIndex='" + RouteItem + "' where Id = '" + t + "'";
+	if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set RouteItemIndex='" + RouteItem + "' where Id = '" + t + "'";
+
+	string Result = "";
+	if (SignInManager.IsSignedIn(User))
+	{
+		//if (User.IsInRole(UserRoles.Admin))
+		//{
+		try
+		{
+			db.SendRequestToDB(sql);
+			Result = "Виконано...";
+		}
+		catch (Exception ex)
+		{
+			Result = "Помилка: " + ex.ToString();
+		}
+		//log.Add()
+		//}
+		//else
+		//{
+		//	Result = "Помилка: Для виконання дфї не достатньо прав...";
+		//}
+	}
+	else
+	{
+		Result = "Помилка: Користувач не авторизований...";
+	}
+
+
+
+}
+@Result
+<br />
+<a href="./CarInfo?tc=@GoBackTC" class="btn btn-primary">Назад до авто</a>
