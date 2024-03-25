@@ -8,5 +8,10 @@
 		{
 			System.IO.File.AppendAllLines(fn, new string[] { (NewLine == true ? "\r\n" : "") + DateTime.Now.ToString("yyyy.MM.dd HH:mm:ss") + " - " + txt });
 		}
+
+		public static void Add(int num, bool NewLine = false)
+		{
+			Add(num.ToString(), NewLine);
+		}
 	}
 }

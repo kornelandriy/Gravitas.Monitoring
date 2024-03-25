@@ -47,6 +47,7 @@ namespace Gravitas.Monitoring.HelpClasses
 		/// <param name="DataList">Посилання на список для результатів запиту</param>
 		public static void GetDataFromDBMSSQL(string SelectString, ref List<string[]> DataList)
 		{
+			log.Add("SQL Command: " + SelectString);
 			SqlConnection conn = new SqlConnection(DBConnStr[EnterpriseNum]);
 			conn.Open();
 			SqlDataReader reader = new SqlCommand(SelectString, conn).ExecuteReader();
@@ -65,6 +66,9 @@ namespace Gravitas.Monitoring.HelpClasses
 			reader.Dispose();
 			conn.Close();
 			conn.Dispose();
+
+			log.Add("Returned rows count: " + DataList.Count);
+
 			GC.Collect();
 		}
 

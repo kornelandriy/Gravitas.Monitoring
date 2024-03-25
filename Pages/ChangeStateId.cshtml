@@ -2,6 +2,7 @@
 @model Gravitas.Monitoring.Pages.ChangeStateIdModel
 @using Gravitas.Monitoring.HelpClasses
 @{
+	/*
 	string id = HttpContext.Request.Query["id"].ToString();
 	string StateId = HttpContext.Request.Query["StateId"].ToString();
 	string tc = HttpContext.Request.Query["tc"].ToString();
@@ -26,8 +27,10 @@
 		Menu += "<a href=\"./SetNewStateId?id=" + id + "&StateId=" + i + "&tc=" + tc + "&TableName=" + TableName + "\" class=\"btn btn-primary\">" + carinfohelper.GetNodeStatus("" + i) + "</a><br /><br />";
 	}
 	Menu += "</center></td></tr></table>";
+	*/
 }
-<div class="text-center">
+@{/*
+		<div class="text-center">
 	<center>
 		Виберіть новий стан для <b>@NodeName</b> <br /> Поточний статус: <b>@S</b>
 		<br /><br />
@@ -35,4 +38,5 @@
 		<br /><a href="./CarInfo?tc=@tc" class="btn btn-primary">Назад до інформації про авто</a>
 	</center>
 
-</div>
+		</div>
+*/}

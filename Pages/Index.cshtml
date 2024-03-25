@@ -2,15 +2,12 @@
 @using Gravitas.Monitoring.Constants
 @model IndexModel
 @inject SignInManager<IdentityUser> SignInManager
-
 @{
 	ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
 	<h1 class="display-4">Адмін панель</h1>
-	@{/* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*/}
-
 	@if (SignInManager.IsSignedIn(User))
 	{
 		@if (User.IsInRole(UserRoles.Admin))
@@ -24,19 +21,9 @@
 		{
 			<a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для простого користувача</a>
 		}
-
 	}
-		<a href="./CarList" class="display-2 btn btn-primary">Авто</a><br /><br />
-		<a href="./CardList" class="display-2 btn btn-primary">Картки</a><br /><br />
-		<a href="./" class="display-2 btn btn-primary">Пошук мітки</a><br /><br />
-		<a href="./" class="display-2 btn btn-primary">4</a><br />
-
-
-		<br /><br />User roles:<br />
-		<br />Admin: @User.IsInRole(UserRoles.Admin)
-		<br />Modifier: @User.IsInRole(UserRoles.Modifier)
-		<br />AdminUser: @User.IsInRole(UserRoles.AdminUser)
-		<br />User: @User.IsInRole(UserRoles.User)
-
-</div>
-
+	<a href="./CarList" class="display-2 btn btn-primary">Авто</a>
+	<a href="./CardList" class="display-2 btn btn-primary">Картки</a>
+	<a href="./" class="display-2 btn btn-primary">Пошук мітки</a>
+	<a href="./" class="display-2 btn btn-primary">Обладнання</a>
+	<a href="./" class="display-2 btn btn-primary">Вузли</a>

@@ -7,6 +7,8 @@ namespace Gravitas.Monitoring.Pages.Monitoring
     [Authorize(Roles = UserRoles.AdminUser)]
     public class ViewAuthorized : PageModel
     {
+        string s = "";
+
         public void OnGet()
         {
             

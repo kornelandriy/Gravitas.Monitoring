@@ -6,10 +6,14 @@ namespace Gravitas.Monitoring.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
             : base(options)
         {
         }
+
+
+
+
         public DbSet<Gravitas.Monitoring.Models.Contact> Contact { get; set; } = default!;
     }
 }

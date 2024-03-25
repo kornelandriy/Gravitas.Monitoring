@@ -1,0 +1,52 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.ReplaceLabelModel
+@{
+
+}
+
+<form method="post">
+
+	<div class="row">
+		<div class="col-4">
+
+			<fieldset>
+				@foreach (string[] s in Model.AntennaList)
+				{
+					if (Model.CurAntenna == s[2])
+					{
+						<label><input type="radio" asp-for="CurAntenna" value="@s[2]" checked />(@s[0])@s[1]</label>
+					}
+					else
+					{
+						<label><input type="radio" asp-for="CurAntenna" value="@s[2]" />(@s[0])@s[1]</label>
+					}
+					<br />
+				}
+			</fieldset>
+		</div>
+		<div class="col-6">
+			<p>Мітка авто</p>
+			<p style="font-size: 24pt;">@Model.CurLabel</p>
+			<div style="width: 100%; height: 200px; border: 1px solid black; background-color: #ffffee">
+				<p>
+					@Model.DeviceRawData
+				</p>
+				<p>
+					@Model.ParsedData
+				</p>
+			</div>
+			<input type="hidden" asp-for="CurLabel" />
+			<button type="submit" class="btn btn-primary">🔃 Отримати дані</button>
+
+
+
+		</div>
+	</div>
+
+</form>
+
+
+
+
+
+

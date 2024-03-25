@@ -2,206 +2,81 @@
 @model Gravitas.Monitoring.Pages.CarListModel
 @using Gravitas.Monitoring.HelpClasses
 @{
-	List<string[]> lst = new List<string[]>();
-
-	string CarNo = HttpContext.Request.Query["CarNum"].ToString();
-	//
-	string f1 = HttpContext.Request.Query["chk1"].ToString();
-	string f2 = HttpContext.Request.Query["chk2"].ToString();
-	string f3 = HttpContext.Request.Query["chk3"].ToString();
-	string f4 = HttpContext.Request.Query["chk4"].ToString();
-	string f5 = HttpContext.Request.Query["chk5"].ToString();
-	string f6 = HttpContext.Request.Query["chk6"].ToString();
-	string f10 = HttpContext.Request.Query["chk10"].ToString();
-	//
-	string fDate = HttpContext.Request.Query["Date"].ToString();
-	//
-	if (f1 != "") f1 = "checked";
-	if (f2 != "") f2 = "checked";
-	if (f3 != "") f3 = "checked";
-	if (f4 != "") f4 = "checked";
-	if (f5 != "") f5 = "checked";
-	if (f6 != "") f6 = "checked";
-	if (f10 != "") f10 = "checked";
-	//
-	if (f1 == "" && f2 == "" && f3 == "" && f4 == "" && f5 == "" && f6 == "" && f10 == "")
-	{
-		f1 = "checked";
-		f2 = "checked";
-		f3 = "checked";
-		f4 = "checked";
-		f5 = "checked";
-		f6 = "";
-		f10 = "";
-	}
-	//
-	string StateFilter = "";
-	string ssFilter = "";
-	if (f1 != "") { StateFilter += "1,"; ssFilter += "Tickets.StatusId=1 or "; }
-	if (f2 != "") { StateFilter += "2,"; ssFilter += "Tickets.StatusId=2 or "; }
-	if (f3 != "") { StateFilter += "3,"; ssFilter += "Tickets.StatusId=3 or "; }
-	if (f4 != "") { StateFilter += "4,"; ssFilter += "Tickets.StatusId=4 or "; }
-	if (f5 != "") { StateFilter += "5,"; ssFilter += "Tickets.StatusId=5 or "; }
-	if (f6 != "") { StateFilter += "6,"; ssFilter += "Tickets.StatusId=6 or "; }
-	if (f10 != "") { StateFilter += "10,"; ssFilter += "Tickets.StatusId=10 or "; }
-
-	if (StateFilter == "") StateFilter = "1,2,3,4,5,";
-	if (StateFilter == "") ssFilter = "Tickets.StatusId=1 or Tickets.StatusId=2 or Tickets.StatusId=3 or Tickets.StatusId=4 or Tickets.StatusId=5 or ";
-	if (db.EnterpriseNum == 1) ssFilter = ssFilter.Replace("ets", "et");
-
-
-	StateFilter = StateFilter.Substring(0, StateFilter.Length - 1);
-	ssFilter = ssFilter.Substring(0, ssFilter.Length - 4);
-
-
-	//string[] sMas = StateFilter.Substring(0, StateFilter.Length - 1).Split(',');
-	//
-
-	if (fDate == "") fDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
-	//lblCount.Text = "Триває пошук...";
-	DateTime dt = DateTime.Parse(fDate);
-	DateTime dt2 = dt;
-	// DateTime dt1 = chkCurDate.Checked ? dt : dt.AddDays(-1); // Nada vidnovyty
-	DateTime dt1 = dt.AddDays(-1);
-	//
-	int d = dt1.Day;
-	int m = dt1.Month;
-	int y = dt1.Year;
-	//
-	int d2 = dt2.Day;
-	int m2 = dt2.Month;
-	int y2 = dt2.Year;
-	//
-	// Date filter in MS SQL
-	string dateFilter = "(RegistrationDateTime between '" + y.ToString("0000") + "-" + m.ToString("00") + "-" + d.ToString("00") + " 00:00:00.000'" +
-											" and '" + y2.ToString("0000") + "-" + m2.ToString("00") + "-" + d2.ToString("00") + " 23:59:59.999')";
-	//
-	string sql = "";
-
-	//if (db.EnterpriseNum == 0) sql = "select * from dbo.SingleWindowOpDatas where StateId = '10' and " + dateFilter;
-	if (db.EnterpriseNum == 0)
-	{
-		sql = "SELECT TOP (5000) SingleWindowOpDatas.* FROM dbo.Tickets ";
-		sql += "join SingleWindowOpDatas on SingleWindowOpDatas.TicketContainerId = Tickets.TicketContainerId ";
-		sql += "where (" + ssFilter + ") and (SingleWindowOpDatas." + dateFilter.Substring(1, dateFilter.Length - 1) + " ";
-		sql += "and SingleWindowOpDatas.StateId=10 order by SingleWindowOpDatas.RegistrationDateTime";
-	}
-	//if (db.EnterpriseNum == 1) sql = "select * from opd.SingleWindowOpData where StateId = '10' and " + dateFilter;
-	if (db.EnterpriseNum == 1)
-	{
-		sql = "SELECT TOP (5000) SingleWindowOpData.* FROM dbo.Ticket ";
-		sql += "join SingleWindowOpData on SingleWindowOpData.TicketContainerId = Ticket.TicketContainerId ";
-		sql += "where (" + ssFilter + ") and (SingleWindowOpData." + dateFilter.Substring(1, dateFilter.Length - 1) + " ";
-		sql += "and SingleWindowOpData.StateId=10 order by SingleWindowOpData.RegistrationDateTime";
-	}
-
-
-
-
-
-
-	Console.WriteLine("SQL Command\n");
-	Console.WriteLine(sql + "\n");
-
-	db.GetDataFromDBMSSQL(sql, ref lst);
-
-	List<string[]> NewData = new List<string[]>();
-
-	//string[] sMas = GetCarsFilter();
-	//string[] sMas = "1,2,3,4,5".Split(',');
-	string tmpCarNum = "";
-	if (db.EnterpriseNum == 0) // MZVKK
-	{
-		foreach (string[] s in lst)
-		{
-			if (s[101] == "") break;
-			//if (sMas.Contains(fromdb.GetTicketStatus(s[101])))
-			{
-				tmpCarNum = s[25] != "" ? fromdb.GetCarNumberByCarId(s[25]) : "ND";
-				if (tmpCarNum == "ND")
-				{
-					tmpCarNum = s[27] == "" ? "нема номера" : s[27];
-				}
-				//
-				if (tmpCarNum.ToLower().Contains(CarNo))
-				{
-					NewData.Add(new string[] { /*0*/ fromdb.GetCardNumberByTC(s[102]),
-                                                       /*1*/ fromdb.GetWndNameById(s[100]),
-                                                       /*2*/ tmpCarNum,
-                                                       /*3*/ s[7],
-                                                       /*4*/ fromdb.GetRouteNameByT(s[101]),
-                                                       /*5*/ fromdb.GetWayPointByT(s[101]),
-                                                       /*6*/ fromdb.GetTicketCountByTC(s[102]),
-                                                       /*7*/ s[102],
-                                                       /*8*/ DateTime.Parse(s[40]).ToString("dd.MM.yyyy HH:mm:ss"),
-                                                       /*9*/ DateTime.Parse(s[104]).ToString("dd.MM.yyyy HH:mm:ss") });
-					//
-
-				}
-			}
-		}
-	}
-	if (db.EnterpriseNum == 1) // KE
-	{
-		foreach (string[] s in lst)
-		{
-			if (s[87] == "") break;
-			//if (sMas.Contains(fromdb.GetTicketStatus(s[87])))
-			{
-				tmpCarNum = s[20] != "" ? fromdb.GetCarNumberByCarId(s[20]) : "ND";
-				if (tmpCarNum == "ND")
-				{
-					tmpCarNum = s[97] == "" ? "нема номера" : s[97];
-				}
-				//
-				if (tmpCarNum.ToLower().Contains(CarNo))
-				{
-					NewData.Add(new string[] {  /*0*/ fromdb.GetCardNumberByTC(s[88]),
-                                                        /*1*/ fromdb.GetWndNameById(s[86]),
-                                                        /*2*/ tmpCarNum,
-                                                        /*3*/ s[106],
-                                                        /*4*/ fromdb.GetRouteNameByT(s[87]),
-                                                        /*5*/ fromdb.GetWayPointByT(s[87]),
-                                                        /*6*/ fromdb.GetTicketCountByTC(s[88]),
-                                                        /*7*/ s[88],
-                                                        /*8*/ DateTime.Parse(s[34]).ToString("dd.MM.yyyy HH:mm:ss"),
-                                                        /*9*/ DateTime.Parse(s[90]).ToString("dd.MM.yyyy HH:mm:ss") });
-					//
-
-				}
-			}
-		}
-	}
-	//lblCount.Text = "Знайдено " + NewData.Count + " авто";
-	string st = ""; string str = "";
-	foreach (string[] s in NewData)
-	{
-		str += "<table class=\"yozhstyle1\">";
-		str += "<tr><td class=\"brdr1sb headercolor\">Картка</td><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb headercolor\">Авто</td><td class=\"brdr1sb\">" + s[2] + "</td><tr></td></tr>";
-		str += "<tr><td class=\"brdr1sb headercolor\">Номенклатура</td><td colspan=\"3\" class=\"brdr1sb\">" + s[3] + "</dt><tr></td></tr>";
-		str += "<tr><td class=\"brdr1sb headercolor\">Маршрут</td><td colspan=\"3\" class=\"brdr1sb\">" + s[4] + "</dt><tr></td></tr>";
-		str += "<tr><td class=\"brdr1sb headercolor\">Вікно</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb headercolor\">Етап</td><td class=\"brdr1sb\">" + s[5] + "</td><tr></td></tr>";
-		str += "<tr><td class=\"brdr1sb headercolor\">ТікетКонтейнер</td><td class=\"brdr1sb\">" + s[7] + "</td><td class=\"brdr1sb headercolor\">Тікетів</td><td class=\"brdr1sb\">" + s[6] + "</td><tr></td></tr>";
-		str += "<tr><td class=\"brdr1sb headercolor\">Реєстрація</td><td class=\"brdr1sb\">" + s[8] + "</td><td class=\"brdr1sb headercolor\">Виїзд</td><td class=\"brdr1sb\">" + s[9] + "</td><td><a href=\"./CarInfo?tc=" + s[7] + "\" class=\"btn btn-primary\">&raquo;</a></td></tr>";
-		str += "</table><br>";
-	}
-	st = "<div style=\"height: 100%; overflow: auto;\">" + str + "</div>";
+	ViewData["Title"] = "Автівки";
 }
-<form>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk1" @f1 />1 - Новий</label>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk2" @f2 />2 - Бланк</label>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk3" @f3 />3 - Доопрацювання</label>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk4" @f4 />4 - В роботі</label>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk5" @f5 />5 - Завершено</label>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk6" @f6 />6 - Проведено</label>
-	<label style="padding-right: 7px;"><input style="padding-right: 3px;" type="checkbox" name="chk10" @f10 />10 - Скасовано</label>
-	<br /><br />
-	<input type="date" name="Date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
-	<label>№ авто <input type="text" name="CarNum" value="@CarNo" /></label>
-	<button class="btn btn-success">Знайти</button>
-	<br />
-	@NewData.Count / @lst.Count
-	<br />
+<form method="post" style="box-shadow: 10px 5px 5px rgba(0,0,0,0.3); border: 1px solid black; padding: 5px; margin-top: 5px;">
+	<div class="form-group" style="display: block;">
+		<input type="checkbox" asp-for="f1" /><label asp-for="f1" class="control-label">1 - Новий</label>
+		<input type="checkbox" asp-for="f2" /><label asp-for="f2" class="control-label">2 - В обробці</label>
+		<input type="checkbox" asp-for="f3" /><label asp-for="f3" class="control-label">3 - Доопрацювання</label>
+		<input type="checkbox" asp-for="f4" /><label asp-for="f4" class="control-label">4 - В роботі</label>
+		<input type="checkbox" asp-for="f5" /><label asp-for="f5" class="control-label">5 - Завершено</label>
+		<input type="checkbox" asp-for="f6" /><label asp-for="f6" class="control-label">6 - Проведено</label>
+		<input type="checkbox" asp-for="f10" /><label asp-for="f10" class="control-label">10 - Відхилено</label>
+	</div>
+	<div class="form-group">
+		<label asp-for="fDate" class="control-label">Дата</label><input type="date" asp-for="fDate" />
+		<input type="checkbox" asp-for="fOneDay" /><label asp-for="fOneDay" class="control-label">Одна доба</label>
+	</div>
+	<div class="form-group">
+		<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" />
+		<input type="submit" value="Знайти" class="btn btn-success" />
+	</div>
 </form>
-<br />
-@Html.Raw(@st);
+<div>
+	@if (Model.lstData.Count > 0)
+	{
+		<p>Знайдено @Model.lstData.Count шт.</p>
+	}
+	else
+	{
+		<p>Нічого не знайдено</p>
+	}
+</div>
+@foreach (string[] s in Model.lstData)
+{
+	<br />
+	<table class="yozhstyle1" style="box-shadow: 10px 5px 5px rgba(0,0,0,0.3)">
+		<tr>
+			<td class="brdr1sb headercolor">Картка</td>
+			<td class="brdr1sb">@s[0]</td>
+			<td class="brdr1sb headercolor">Авто</td>
+			<td class="brdr1sb">@s[2]</td>
+			<td rowspan="6" class="brdr1sb">
+				<form method="get" action="CarInfo">
+					<input type="hidden" name="tc" value=@s[7] />
+					<button type="submit" class="btn btn-primary">&raquo;</button>
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td class="brdr1sb headercolor">Номенклатура</td>
+			<td colspan="3" class="brdr1sb">@s[3]</td>
+
+		</tr>
+		<tr>
+			<td class="brdr1sb headercolor">Маршрут</td>
+			<td colspan="3" class="brdr1sb">@s[4]</td>
+
+		</tr>
+		<tr>
+			<td class="brdr1sb headercolor">Вікно</td>
+			<td class="brdr1sb">@s[1]</td>
+			<td class="brdr1sb headercolor">Етап</td>
+			<td class="brdr1sb">@s[5]</td>
+		</tr>
+		<tr>
+			<td class="brdr1sb headercolor">ТікетКонтейнер</td>
+			<td class="brdr1sb">@s[7]</td>
+			<td class="brdr1sb headercolor">Тікетів</td>
+			<td class="brdr1sb">@s[6]</td>
+
+		</tr>
+		<tr>
+			<td class="brdr1sb headercolor">Реєстрація</td>
+			<td class="brdr1sb">@s[8]</td>
+			<td class="brdr1sb headercolor">Виїзд</td>
+			<td class="brdr1sb">@s[9]</td>
+		</tr>
+	</table>
+}
