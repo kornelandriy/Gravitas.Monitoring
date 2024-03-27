@@ -11,7 +11,7 @@ namespace Gravitas.Monitoring.Pages
 	public class CarListModel : PageModel
 	{
 		[BindProperty]
-		public List<string[]> lstData { get; set; }  = new List<string[]>();
+		public List<string[]> lstData { get; set; } = new List<string[]>();
 		//################################################################################
 		[BindProperty]
 		public string CarNum { get; set; } = "";
@@ -49,9 +49,6 @@ namespace Gravitas.Monitoring.Pages
 		{
 
 			if (CarNum.IsNullOrEmpty()) CarNum = "";
-
-			log.Add("CarNum: " + CarNum);
-
 
 			List<string[]> lst = new List<string[]>();
 
@@ -93,17 +90,6 @@ namespace Gravitas.Monitoring.Pages
 			StateFilter = StateFilter.Substring(0, StateFilter.Length - 1);
 			ssFilter = ssFilter.Substring(0, ssFilter.Length - 4);
 
-
-			log.Add("ssFilter: " + ssFilter);
-
-			//string[] sMas = StateFilter.Substring(0, StateFilter.Length - 1).Split(',');
-			//
-
-
-
-			//if (fDate == "") fDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
-
-			//lblCount.Text = "Триває пошук...";
 			//DateTime dt = DateTime.Parse(fDate);
 			DateTime dt = fDate;
 			DateTime dt2 = dt;
@@ -128,7 +114,7 @@ namespace Gravitas.Monitoring.Pages
 				"Nodes.Name, FixedAssets.RegistrationNo, SingleWindowOpDatas.HiredTransportNumber, SingleWindowOpDatas.ProductTitle, RouteTemplates.Name, " +
 				"SingleWindowOpDatas.TicketId, SingleWindowOpDatas.TicketContainerId, Tickets.StatusId, (select COUNT(id) from " +
 				"mhp.dbo.Tickets where Tickets.TicketContainerId = SingleWindowOpDatas.TicketContainerId) as 'tc', SingleWindowOpDatas.RegistrationDateTime, " +
-				"SingleWindowOpDatas.CheckOutDateTime FROM [mhp].[dbo].[Tickets] join [mhp].[dbo].[SingleWindowOpDatas] on SingleWindowOpDatas.TicketContainerId = Tickets.TicketContainerId " +
+				"SingleWindowOpDatas.CheckOutDateTime, dbo.Tickets.RouteItemIndex FROM [mhp].[dbo].[Tickets] join [mhp].[dbo].[SingleWindowOpDatas] on SingleWindowOpDatas.TicketContainerId = Tickets.TicketContainerId " +
 				"left join [mhp].[dbo].[FixedAssets] on FixedAssets.Id = SingleWindowOpDatas.TransportId join [mhp].[dbo].[Nodes] on Nodes.Id = SingleWindowOpDatas.NodeId join [mhp].[dbo].[RouteTemplates] on " +
 				"RouteTemplates.Id = Tickets.RouteTemplateId where (" + ssFilter + ") and " + dateFilter + " and SingleWindowOpDatas.StateId = 10 " +
 				"order by SingleWindowOpDatas.RegistrationDateTime";
@@ -138,24 +124,18 @@ namespace Gravitas.Monitoring.Pages
 				"Node.Name, FixedAsset.RegistrationNo, opd.SingleWindowOpData.HiredTransportNumber, opd.SingleWindowOpData.ProductTitle, RouteTemplate.Name, " +
 				"opd.SingleWindowOpData.TicketId, opd.SingleWindowOpData.TicketContainerId, Ticket.StatusId, (select COUNT(id) from " +
 				"Ticket where Ticket.ContainerId = opd.SingleWindowOpData.TicketContainerId) as 'tc', opd.SingleWindowOpData.RegistrationDateTime, " +
-				"opd.SingleWindowOpData.CheckOutDateTime FROM [mhp].[dbo].[Ticket] join opd.SingleWindowOpData on opd.SingleWindowOpData.TicketContainerId = Ticket.TicketContainerId " +
+				"opd.SingleWindowOpData.CheckOutDateTime, dbo.Tickets.RouteItemIndex FROM [mhp].[dbo].[Ticket] join opd.SingleWindowOpData on opd.SingleWindowOpData.TicketContainerId = Ticket.TicketContainerId " +
 				"left join FixedAsset on FixedAsset.Id = opd.SingleWindowOpData.TransportId join Node on Node.Id = opd.SingleWindowOpData.NodeId join RouteTemplate on " +
 				"RouteTemplate.Id = Ticket.RouteTemplateId where (" + ssFilter + ") and " + dateFilter + " and opd.SingleWindowOpData.StateId = 10 " +
 				"order by opd.SingleWindowOpData.RegistrationDateTime";
 
 			SQLString = sql;
 
-			Console.WriteLine("Enterprise: " + db.EnterpriseNum + "\r\nSQL: " + sql);
-
-
-			Console.WriteLine("SQL Command\n");
-			Console.WriteLine(sql + "\n");
-
 			db.GetDataFromDBMSSQL(sql, ref lst);
 
 			List<string[]> NewData = new List<string[]>();
 
-			
+
 			cnt = "";
 
 			//string[] sMas = GetCarsFilter();
@@ -165,7 +145,7 @@ namespace Gravitas.Monitoring.Pages
 			{
 				foreach (string[] s in lst)
 				{
-				cnt += "mzvkk<br>";
+					cnt += "mzvkk<br>";
 					if (s[6] == "") break;
 
 					tmpCarNum = s[2] == "" ? s[3] : s[2];
@@ -173,15 +153,16 @@ namespace Gravitas.Monitoring.Pages
 					if (tmpCarNum.ToLower().Contains(CarNum))
 					{
 						lstData.Add(new string[] { /*0*/ s[0],
-                                               /*1*/ s[1],
-                                               /*2*/ tmpCarNum,
-                                               /*3*/ s[4],
-                                               /*4*/ s[5],
-                                               /*5*/ s[8],
-                                               /*6*/ s[9],
-                                               /*7*/ s[7],
-                                               /*8*/ DateTime.Parse(s[10]).ToString("dd.MM.yyyy HH:mm:ss"),
-                                               /*9*/ DateTime.Parse(s[11]).ToString("dd.MM.yyyy HH:mm:ss") });
+                                                   /*1*/ s[1],
+                                                   /*2*/ tmpCarNum,
+                                                   /*3*/ s[4],
+                                                   /*4*/ s[5],
+                                                   /*5*/ GetStatusNamebyId(s[8]),
+                                                   /*6*/ s[9],
+                                                   /*7*/ s[7],
+                                                   /*8*/ DateTime.Parse(s[10]).ToString("dd.MM.yyyy HH:mm:ss"),
+                                                   /*9*/ DateTime.Parse(s[11]).ToString("dd.MM.yyyy HH:mm:ss"),
+								      	  	      /*10*/ s[12] }) ;
 						//
 
 					}
@@ -220,7 +201,7 @@ namespace Gravitas.Monitoring.Pages
 					}
 				}
 			}
-			
+
 			//lst = NewData;
 			//lblCount.Text = "Знайдено " + NewData.Count + " авто";
 			//string str = "";
@@ -238,6 +219,35 @@ namespace Gravitas.Monitoring.Pages
 			//st = "<div style=\"height: 100%; overflow: auto;\">" + str + "</div>";
 		}
 
+		private string GetStatusNamebyId(string id)
+		{
+			string r = "Wrong StateId";
+			switch (id.Trim())
+			{
+				case "1":
+					r = "Новий";
+					break;
+				case "2":
+					r = "В обробці";
+					break;
+				case "3":
+					r = "Доопрацювання";
+					break;
+				case "4":
+					r = "В роботі";
+					break;
+				case "5":
+					r = "Завершено";
+					break;
+				case "6":
+					r = "Проведено";
+					break;
+				case "10":
+					r = "Відхилено";
+					break;
+			}
+			return r;
+		}
 
 	}
 }

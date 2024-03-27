@@ -3,12 +3,9 @@
 @{
 
 }
-<form method="get" action="testCtrl">
-	<input type="hidden" name="tc" value="140000" />
-	<button type="submit" class="btn btn-primary">&raquo; GET &raquo;</button>
+<form method="post">
+	<button asp-action="@Model.Copy" type="submit" class="btn btn-primary">&raquo; Copy &raquo;</button>
 </form>
+<br />
+@Model.s
 
-<form method="post" action="testCtrl">
-	<input type="hidden" name="tc" value="140000" />
-	<button type="submit" class="btn btn-primary">&raquo; POST &raquo;</button>
-</form>

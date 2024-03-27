@@ -55,7 +55,6 @@ namespace Gravitas.Monitoring.Pages
 			//this.tc = tc;
 			CurTC = tc;
 
-			log.Add(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> tc: " + tc, true);
 			try
 			{
 				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Cards where TicketContainerId = " + tc, ref cards);

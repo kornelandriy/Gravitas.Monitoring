@@ -47,7 +47,7 @@ namespace Gravitas.Monitoring.HelpClasses
 		/// <param name="DataList">Посилання на список для результатів запиту</param>
 		public static void GetDataFromDBMSSQL(string SelectString, ref List<string[]> DataList)
 		{
-			log.Add("SQL Command: " + SelectString);
+			log.Add("GetDataFromDBMSSQL: SQL: " + SelectString);
 			SqlConnection conn = new SqlConnection(DBConnStr[EnterpriseNum]);
 			conn.Open();
 			SqlDataReader reader = new SqlCommand(SelectString, conn).ExecuteReader();
@@ -67,7 +67,7 @@ namespace Gravitas.Monitoring.HelpClasses
 			conn.Close();
 			conn.Dispose();
 
-			log.Add("Returned rows count: " + DataList.Count);
+			log.Add("GetDataFromDBMSSQL: Returned rows count: " + DataList.Count);
 
 			GC.Collect();
 		}
@@ -143,7 +143,8 @@ namespace Gravitas.Monitoring.HelpClasses
 		public static void SendRequestToDB(string sql)
 		{
 			//MessageBox.Show(sql);
-			Console.WriteLine("SendRequestToDB: " + sql);
+			//Console.WriteLine("SendRequestToDB: " + sql);
+			log.Add("SendRequestToDB: SQL: "+sql);
 			if (sql.Length == 0) return;
 			try
 			{

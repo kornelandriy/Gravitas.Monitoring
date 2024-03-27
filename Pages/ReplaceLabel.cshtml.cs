@@ -21,7 +21,7 @@ namespace Gravitas.Monitoring.Pages
 		[BindProperty]
 		public List<string> ParsedLabels { get; set; } = new List<string>();
 		[BindProperty]
-		public string DeviceRawData { get; set; } = "\"{\\\"InData\\\":{\\\"TagList\\\":{\\\"E200001D1717016518108F3A\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\",\\\"E200001D9912015319507E00\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\"}},\\\"OutData\\\":null,\\\"LastUpdate\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\",\\\"ErrorCode\\\":0,\\\"Id\\\":0}\"";
+		public string DeviceRawData { get; set; } = "";
 
 
 
@@ -50,16 +50,51 @@ namespace Gravitas.Monitoring.Pages
 		{
 			MakeAntennaList();
 			Result = CurAntenna;
-			GetDeviceData(); // tst !!!
+			//GetDeviceData(); // tst !!!
 			List<string> tmp = new List<string>();
+			DeviceRawData = GetDeviceData(CurAntenna);
 			ParsedData = ZebraDataParser(DeviceRawData, ref tmp);
 			ParsedLabels = tmp;
 		}
 
-		private void GetDeviceData()
-		{
+		//private string GetDeviceData()
+		//{
+		//	return "\"{\\\"InData\\\":{\\\"TagList\\\":{\\\"E200001D1717016518108F3A\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\",\\\"E200001D9912015319507E00\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\"}},\\\"OutData\\\":null,\\\"LastUpdate\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\",\\\"ErrorCode\\\":0,\\\"Id\\\":0}\"";
+		//}
 
+		private string GetDeviceData(string id)
+		{
+			if (string.IsNullOrEmpty(id)) return "Wrong device id";
+			long l = 0;
+			try
+			{
+				l = long.Parse(id);
+				return GetDeviceData(l);
+			}
+			catch { return "Wrong device id"; }
 		}
+
+		private string GetDeviceData(long id)
+		{
+			try
+			{
+				if (id < 1) return "Invalid id";
+				string s = "";
+				using (System.Net.WebClient wc = new System.Net.WebClient())
+				{
+					//byte[] raw = wc.DownloadData("http://localhost:8090/DeviceSync/GetState?deviceId=" + id);
+					byte[] raw = wc.DownloadData("http://10.9.176.98:8090/DeviceSync/GetState?deviceId=" + id);
+					s = System.Text.Encoding.UTF8.GetString(raw);
+				}
+				return s;
+			}
+			catch (Exception ex)
+			{
+				return ex.Message;
+			}
+		}
+
+
 
 		private void MakeAntennaList()
 		{
@@ -100,20 +135,46 @@ namespace Gravitas.Monitoring.Pages
 			List<string> tmp = new List<string>();
 			tmp = s.Split(',').ToList();
 			string rr = "";
+			string lblId = "";
 			foreach (string ss in tmp)
 			{
-
 				n1 = 0;
 				n2 = ss.IndexOf(":");
 				r = ss.Substring(n1, n2 - n1);
-				lst.Add(r);
+				lblId = r;
+				//lst.Add(r);
 				n1 = ss.IndexOf("T") - 10;
 				n2 = ss.IndexOf("T") + 8;
+
+
 				r = "[ " + ss.Substring(n1, n2 - n1 + 1) + " ]   -   " + r;
 				r = r.Replace("T", " ]   [ ");
-				rr += r + "\r\n";
+				rr += r + GetLabelParams(lblId) + "<br />\r\n";
 			}
 			return rr;
+		}
+
+		private string GetLabelParams(string LabelId)
+		{
+			List<string[]> tmp = new List<string[]>();
+			db.GetDataFromDBMSSQL("select IsActive, TicketContainerId from dbo.Cards where Id = '" + LabelId + "'", ref tmp);
+
+			if (tmp.Count == 0) return " Чужа";
+
+
+			return " Своя " + (tmp[0][0] == "True" ? "Активна" : "Вимкнута") + (tmp[0][1] == "" ? " Не зайнята" : " TicketContainer: " + tmp[0][1]);
+		}
+
+
+		// ========================================================================================================================================
+
+		public string TestProc(string lbl)
+		{
+
+			log.Add("TestProc: " + lbl);
+
+
+			return "Ass";// Page();
 		}
 	}
 }

@@ -23,7 +23,6 @@ namespace Gravitas.Monitoring.Pages
 			log.Add("testCtrl: OnPost: tc: " + tc);
 		}
 
-		[HttpPost]
 		public IActionResult Index(string tc)
 		{
 			this.tc = tc;
