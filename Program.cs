@@ -10,9 +10,19 @@ using Microsoft.Extensions.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+
+var MZIKKconnString = builder.Configuration.GetConnectionString("MZIKKDB") ?? throw new InvalidOperationException("Connection string 'MZIKKDB' not found.");
+builder.Services.AddDbContext<MzvkkDbContext>(options => options.UseSqlServer(MZIKKconnString));
+
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     {
@@ -20,6 +30,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -27,8 +41,14 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+
     var context = services.GetRequiredService<ApplicationDbContext>();
     context.Database.Migrate();
+
+    var context2 = services.GetRequiredService<MzvkkDbContext>();
+    context2.Database.Migrate();
+
+
 
     await SeedData.Initialize(services);
 }

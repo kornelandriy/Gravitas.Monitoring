@@ -16,44 +16,37 @@ namespace Gravitas.Monitoring.Pages
 {
 	public class TestControlsModel : PageModel
 	{
+
+		private readonly Gravitas.Monitoring.Data.MzvkkDbContext _context;
+
+		public TestControlsModel(Gravitas.Monitoring.Data.MzvkkDbContext context)
+		{
+			_context = context;
+		}
+
+		public IActionResult OnGet()
+		{
+			//TicketsList = _context.Tickets.Where(t => t.Id > 100557 && t.SecondaryRouteTemplateId != null).ToList();
+			TicketsList = _context.Tickets.Where(t => t.Id > 100000 && t.Id < 100009).ToList();
+			return Page();
+		}
+
+		//[BindProperty]
+		//public Tickets Tickets { get; set; } = default!;
 		[BindProperty]
-		public string s { get; set; } = "";
+		public List<Tickets> TicketsList { get; set; } = new List<Tickets>();
 
-
-
-
-		public void Copy()
-		{
-			try
-			{
-				log.Add("Copy:");
-				s = "Copy: Ok";
-			}
-			catch (Exception ex)
-			{
-				s = "Copy: Err: " + ex.ToString();
-			}
-
-
-
-		}
-
-		public void OnGet()
-		{
-			string sAction= HttpContext.Request.Query["action"].ToString();
-
-			if (!sAction.IsNullOrEmpty())
-			{
-
-				log.Add("Copy ???");
-
-				Redirect("/TestControls");
-			}
-		}
-
-		public void OnPost()
+		// To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+		public async Task<IActionResult> OnPostAsync()
 		{
 
+
+
+			//if (!ModelState.IsValid) { return Page(); }
+			//_context.Tickets.Add(Tickets);
+			//await _context.SaveChangesAsync();
+			//return RedirectToPage("./TestControls");
+			return Page();
 		}
 	}
 }

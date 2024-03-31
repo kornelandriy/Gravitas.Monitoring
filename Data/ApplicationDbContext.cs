@@ -10,10 +10,7 @@ namespace Gravitas.Monitoring.Data
             : base(options)
         {
         }
-
-
-
-
         public DbSet<Gravitas.Monitoring.Models.Contact> Contact { get; set; } = default!;
+        //public DbSet<Gravitas.Monitoring.Models.Tickets> Tickets { get; set; } = default!;
     }
 }

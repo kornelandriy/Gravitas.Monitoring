@@ -4,18 +4,15 @@ using Gravitas.Monitoring.Models;
 
 namespace Gravitas.Monitoring.Data
 {
-
 	public class MzvkkDbContext : DbContext
 	{
-		public MzvkkDbContext(DbContextOptions<ApplicationDbContext> options)
+		public MzvkkDbContext(DbContextOptions<MzvkkDbContext> options)
 			: base(options)
 		{
 		}
 
+		public DbSet<Gravitas.Monitoring.Models.Tickets> Tickets { get; set; } = default!;
 
-
-
-		public DbSet<Gravitas.Monitoring.Models.Contact> Ticket { get; set; } = default!;
 	}
 
 

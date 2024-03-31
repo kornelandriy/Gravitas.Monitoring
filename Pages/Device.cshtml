@@ -1,0 +1,56 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.DeviceModel
+@{
+	ViewData["Title"] = Model.CurDeviceId;
+}
+
+<center><h1> Обладнання: </h1></center>
+<br />
+@if (Model.CurDevice.Count > 0)
+{
+	<br />
+	<div class="row">
+		<div class="col-4">
+			<table class="yozhstyle1">
+				<tr>
+					<td class="brdr1sb">id</td>
+					<td class="brdr1sb">@Model.CurDevice[0][0]</td>
+				</tr>
+				<tr>
+					<td class="brdr1sb">Назва</td>
+					<td class="brdr1sb">@Model.CurDevice[0][4]</td>
+				</tr>
+				<tr>
+					<td class="brdr1sb">Тип</td>
+					<td class="brdr1sb">@Model.CurDevice[0][3]</td>
+				</tr>
+				<tr>
+					<td class="brdr1sb">ParentId</td>
+					<td class="brdr1sb">@Model.CurDevice[0][1]</td>
+				</tr>
+				<tr>
+					<td class="brdr1sb">Стан</td>
+					<td class="brdr1sb">@Model.CurDevice[0][2]</td>
+				</tr>
+				<tr>
+					<td class="brdr1sb">Параметри</td>
+					<td class="brdr1sb">@Model.CurDevice[0][5]</td>
+				</tr>
+			</table>
+			<br />
+			<a href="@Model.CurDeviceURL" class="btn btn-primary">WEB інтерфейс &raquo;</a>
+		</div>
+		<div class="col-8">
+			<form method="post">
+				<button type="submit" class="btn btn-primary" style="margin-bottom: 3px;">🔃 Отримати дані</button>
+			</form>
+			<div class="yozhstyle1" style="width: 100%; min-height: 200px; display: inline-block;">
+				@Html.Raw(Model.DeviceData)
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<h1>Error... CurDevice.Count - 0</h1>
+}
