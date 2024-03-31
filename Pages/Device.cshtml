@@ -10,7 +10,16 @@
 {
 	<br />
 	<div class="row">
-		<div class="col-4">
+		<div class="col-2">
+			<a asp-area="" asp-page="/Nodes" class="btn btn-primary" style="margin: 2px; width: 100%">⏪ Назад до вузлів</a>
+
+			<form method="post">
+				<button type="submit" class="btn btn-primary" style="margin: 2px; width: 100%;">🔃 Отримати дані</button>
+			</form>
+
+			<a href="@Model.CurDeviceURL" class="btn btn-primary" style="margin: 2px; width: 100%;" target="_blank">WEB інтерфейс ⏩</a>
+		</div>
+		<div class="col-10">
 			<table class="yozhstyle1">
 				<tr>
 					<td class="brdr1sb">id</td>
@@ -38,17 +47,16 @@
 				</tr>
 			</table>
 			<br />
-			<a href="@Model.CurDeviceURL" class="btn btn-primary">WEB інтерфейс &raquo;</a>
 		</div>
-		<div class="col-8">
-			<form method="post">
-				<button type="submit" class="btn btn-primary" style="margin-bottom: 3px;">🔃 Отримати дані</button>
-			</form>
+	</div>
+	<div class="row">
+		<div class="col-12">
 			<div class="yozhstyle1" style="width: 100%; min-height: 200px; display: inline-block;">
 				@Html.Raw(Model.DeviceData)
 			</div>
 		</div>
 	</div>
+
 }
 else
 {
