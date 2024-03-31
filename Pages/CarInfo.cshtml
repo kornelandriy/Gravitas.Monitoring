@@ -3,35 +3,71 @@
 @using Gravitas.Monitoring.HelpClasses
 @{
 	ViewData["Title"] = "Авто";
+	bool fr = true;
+	string g = "0";
 }
 <p style=" margin-top: 5px;">
-<a href="./CarList" class="btn btn-primary">Назад до списку авто</a>
-<a href="./Replacelabel?tc=@Model.CurTC" class="btn btn-primary">Пошук міток</a>
+	<a href="./CarList" class="btn btn-primary">⏪ Назад до списку авто</a>
+	<a href="./Replacelabel?tc=@Model.CurTC" class="btn btn-primary">🔍 Пошук міток</a>
 </p>
-<br />
-<b>Картки і мітки</b>
-<br />
-<table class="yozhstyle1">
-	<tr><td colspan="3" class="brdr1sb headercolor">Картка водія</td></tr>
-	@foreach (string[] s in Model.lst1)
-	{
-		<tr><td class="brdr1sb">@s[0]</td><td class="brdr1sb">@s[1]</td></tr>
-	}
-	<tr><td colspan="3" class="brdr1sb headercolor">Мітка авто</td></tr>
-	@foreach (string[] s in Model.lst2)
-	{
-		<tr><td class="brdr1sb">@s[0]</td><td class="brdr1sb">@s[1]</td></tr>
-	}
-	<tr><td colspan="3" class="brdr1sb headercolor">Картка лотка</td></tr>
-	@foreach (string[] s in Model.lst3)
-	{
-		<tr><td class="brdr1sb">@s[0]</td><td class="brdr1sb">@s[1]</td></tr>
-	}
-</table><br /><br />
-	
-	@Html.Raw(Model.sRoute)
-	@Html.Raw(Model.sNodes)
-	@Html.Raw(Model.sTickets)
 
+<duv class="row">
+	<div class="col-6">
+		<h3>Маршрут</h3>
+		<p>@Model.RouteNane</p>
+		<table class="yozhstyle1" style="display:inline-block;">
+			<tr><td class="brdr1sb headercolor"><center>Група</center></td><td class="brdr1sb headercolor"><center>Вузли</center></td></tr>
+			@foreach (string[] rs in Model.Route)
+			{
+				if (rs[0] == Model.LastRouteItem)
+				{
+					<tr><td class="brdr1sb">👉@rs[0]</td><td class="brdr1sb">@Html.Raw(rs[1])</td></tr>
+				}
+				else
+				{
+					<tr><td class="brdr1sb">@rs[0]</td><td class="brdr1sb">@Html.Raw(rs[1])</td></tr>
+				}
+			}
+		</table>
+		<p>
+			Останнє пройдене:<br />
+			Група: @Model.LastRouteItem<br />
+			Вузол: [@Model.LastRouteNode] - @Model.LastRouteNodeName
+		</p>
+
+	</div>
+	<div class="col-6">
+		<h3>Картки і мітки</h3>
+		<table class="yozhstyle1" style="display:inline-block;">
+			<tr><td colspan="3" class="brdr1sb headercolor">Картка водія</td></tr>
+			@foreach (string[] s in Model.lst1)
+			{
+				<tr><td class="brdr1sb">@s[0]</td><td class="brdr1sb">@s[1]</td></tr>
+			}
+			<tr><td colspan="3" class="brdr1sb headercolor">Мітка авто</td></tr>
+			@foreach (string[] s in Model.lst2)
+			{
+				<tr><td class="brdr1sb">@s[0]</td><td class="brdr1sb">@s[1]</td></tr>
+			}
+			<tr><td colspan="3" class="brdr1sb headercolor">Картка лотка</td></tr>
+			@foreach (string[] s in Model.lst3)
+			{
+				<tr><td class="brdr1sb">@s[0]</td><td class="brdr1sb">@s[1]</td></tr>
+			}
+		</table><br /><br />
+	</div>
+</duv>
+<div class="row">
+	<br />
+	<br />
+	<h3>Проходження вузлів на маршруті</h3>
+	@Html.Raw(Model.sNodes)
+</div>
+<div class="row">
+	<br />
+	<br />
+	<h3>Тікети</h3>
+	@Html.Raw(Model.sTickets)
+</div>
 <br />
-<a href="./CarList" class="btn btn-primary">Назад до списку авто</a>
+<a href="./CarList" class="btn btn-primary">⏪ Назад до списку авто</a>

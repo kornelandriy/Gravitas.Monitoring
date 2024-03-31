@@ -30,22 +30,25 @@
 
 			</div><br />
 			<input type="hidden" asp-for="CurLabel" />
-			<button type="submit" class="btn btn-primary">🔃 Отримати дані</button><br /><br />
-			<table class="yozhstyle1">
-				@foreach (string s in Model.ParsedLabels)
-				{
-					<tr>
-						<td class="brdr1sb">
-							@s
-						</td>
-						<td class="brdr1sb">
-							<a asp-action="TestProc(@s)">ass</a>
-						</td>
-						<td class="brdr1sb">
-						</td>
-					</tr>
-				}
+			<button type="submit" class="btn btn-primary">🔃 Отримати дані</button>
+			<a href="./CarInfo?tc=@Model.tc" class="btn btn-primary" style="margin: 2px;">⏪ Назад до авто</a>
+			@*
+			<table class="yozhstyle1" style="display:inline-block;">
+			@foreach (string s in Model.ParsedLabels)
+			{
+			<tr>
+			<td class="brdr1sb">
+			@s
+			</td>
+			<td class="brdr1sb">
+			<a asp-action="TestProc(@s)">ass</a>
+			</td>
+			<td class="brdr1sb">
+			</td>
+			</tr>
+			}
 			</table>
+			*@
 		</div>
 	</div>
 </form>

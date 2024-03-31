@@ -23,13 +23,17 @@
 		{
 			Groups += "Користувачі<br />";
 			<br />
-
 			<br />
-			<div class="yozhstyle1" style="display:inline-block;">
-				@*<a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для простого користувача</a>*@
-				<a href="./CarList" class="display-2 btn btn-primary">Авто</a>
-				<a href="./CardList" class="display-2 btn btn-primary">Картки</a>
-				<a href="./Nodes" class="display-2 btn btn-primary">Вузли</a>
+			<div class="row yozhstyle1">
+				<div class="col-4">
+					<a href="./CarList" class="display-2 btn btn-primary" style="display:block;">Авто</a>
+				</div>
+				<div class="col-4">
+					<a href="./CardList" class="display-2 btn btn-primary" style="display:block;">Картки</a>
+				</div>
+				<div class="col-4">
+					<a href="./Nodes" class="display-2 btn btn-primary" style="display:block;">Вузли</a>
+				</div>
 			</div>
 		}
 
@@ -40,7 +44,7 @@
 		}
 	}
 </div>
-<div>
+<div style="margin-top: 100px;">
 	@if (Groups != "")
 	{
 		<div>

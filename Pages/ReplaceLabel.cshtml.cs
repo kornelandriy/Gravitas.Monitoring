@@ -7,7 +7,7 @@ namespace Gravitas.Monitoring.Pages
 	public class ReplaceLabelModel : PageModel
 	{
 		[BindProperty]
-		private string tc { get; set; } = "";
+		public string tc { get; set; } = "";
 		[BindProperty]
 		public List<string[]> AntennaList { get; set; } = new List<string[]>();
 		[BindProperty]

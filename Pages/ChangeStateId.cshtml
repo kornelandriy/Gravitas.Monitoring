@@ -1,42 +1,50 @@
 ﻿@page
 @model Gravitas.Monitoring.Pages.ChangeStateIdModel
-@using Gravitas.Monitoring.HelpClasses
+@using Gravitas.Monitoring.Constants
+@inject SignInManager<IdentityUser> SignInManager
+
 @{
-	/*
-	string id = HttpContext.Request.Query["id"].ToString();
-	string StateId = HttpContext.Request.Query["StateId"].ToString();
-	string tc = HttpContext.Request.Query["tc"].ToString();
-	string TableName = HttpContext.Request.Query["TableName"].ToString();
-	string NodeName = HttpContext.Request.Query["NodeName"].ToString();
-
-	//##########################################################################################
-
-	string S = carinfohelper.GetNodeStatus(StateId);
-
-
-	// 1 - 6      10 - 15
-	string Menu = "<table clas\"yozhstyle1\"><tr><td><center>";
-
-	for (int i = 1; i < 7; i++)
-	{
-		Menu += "<a href=\"./SetNewStateId?id=" + id + "&StateId=" + i + "&tc=" + tc + "&TableName=" + TableName + "\" class=\"btn btn-primary\">" + carinfohelper.GetNodeStatus("" + i) + "</a><br /><br />";
-	}
-	Menu += "</center></td><td><center>";
-	for (int i = 10; i < 16; i++)
-	{
-		Menu += "<a href=\"./SetNewStateId?id=" + id + "&StateId=" + i + "&tc=" + tc + "&TableName=" + TableName + "\" class=\"btn btn-primary\">" + carinfohelper.GetNodeStatus("" + i) + "</a><br /><br />";
-	}
-	Menu += "</center></td></tr></table>";
-	*/
 }
-@{/*
-		<div class="text-center">
-	<center>
-		Виберіть новий стан для <b>@NodeName</b> <br /> Поточний статус: <b>@S</b>
-		<br /><br />
-		@Html.Raw(Menu)
-		<br /><a href="./CarInfo?tc=@tc" class="btn btn-primary">Назад до інформації про авто</a>
-	</center>
-
-		</div>
-*/}
+@if (SignInManager.IsSignedIn(User))
+{
+	@if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Modifier))
+	{
+		<center>
+			<h3> Виберіть новий стан для <b>@Model.NodeName</b></h3>
+			<h2> Поточний статус: <b>@Model.GetNodeStatus(Model.StateId)</b></h2>
+			<br />
+			<div class="row">
+				<div class="col-3"></div>
+				<div class="col-3">
+					@for (int i = 1; i < 7; i++)
+					{
+						<form method="post">
+							<input type="hidden" asp-for="@Model.NewStateId" value="@i" />
+							<button class="btn btn-primary" style="width: 100%; margin: 2px;" type="submit" value="@i">@Model.GetNodeStatus("" + i)</button>
+						</form>
+					}
+				</div>
+				<div class="col-3">
+					@for (int j = 10; j < 16; j++)
+					{
+						<form method="post">
+							<input type="hidden" asp-for="@Model.NewStateId" value="@j" />
+							<button class="btn btn-primary" style="width: 100%; margin: 2px;" type="submit" value="@j">@Model.GetNodeStatus("" + j)</button>
+						</form>
+					}
+				</div>
+				<div class="col-3"></div>
+			</div>
+			<br /><a href="./CarInfo?tc=@Model.tc" class="btn btn-primary">Назад до інформації про авто</a>
+			<br /><br /><p>@Model.Result</p>
+		</center>
+	}
+	else
+	{
+		<h1>Не достатньо прав...</h1>
+	}
+}
+else
+{
+	<h1>Користувач не авторизований...</h1>
+}

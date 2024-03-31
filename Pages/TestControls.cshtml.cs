@@ -47,6 +47,7 @@ namespace Gravitas.Monitoring.Pages
 			//await _context.SaveChangesAsync();
 			//return RedirectToPage("./TestControls");
 			return Page();
+
 		}
 	}
 }

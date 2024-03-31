@@ -7,23 +7,34 @@ namespace Gravitas.Monitoring.Pages
 {
 	public class CarInfoModel : PageModel
 	{
-		public  string CurTC = "";
-		private  string CurT = "";
+		public string CurTC = "";
+		private string CurT = "";
 
 		[BindProperty]
 		public string tc { get; set; } = "";
+		[BindProperty]
+		//##################################################################################################################################
+		public List<string[]> Route { get; set; } = new List<string[]>();
+		[BindProperty]
+		public string RouteNane { get; set; } = "";
+		[BindProperty]
+		public string LastRouteItem { get; set; } = "";
+		[BindProperty]
+		public string LastRouteNode { get; set; } = "";
+		[BindProperty]
+		public string LastRouteNodeName { get; set; } = "";
+		//##################################################################################################################################
 
-		
-		public string sNodes  = "";
+
+
+
+
+
+
+		public string sNodes = "";
 		public string sTickets = "";
-		public string sRoute = "";
-
-
-
 
 		public string RouteTemplate = "";
-		public string LastRouteItem = "";
-		public string LastNode = "";
 
 
 		//string tc = HttpContext.Request.Query["tc"].ToString();
@@ -82,7 +93,7 @@ namespace Gravitas.Monitoring.Pages
 			catch { CarCards = "Не вдалося отримати дані про картки..."; }
 
 			//####################################################################################
-
+			string LastNode = "";
 			List<string[]> tmp = new List<string[]>();
 			if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Tickets where TicketContainerId = '" + tc + "'", ref tmp);
 			if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select * from dbo.Ticket where ContainerId = '" + tc + "'", ref tmp);
@@ -96,7 +107,9 @@ namespace Gravitas.Monitoring.Pages
 			if (db.EnterpriseNum == 0) LastNode = tmp[0][9];
 			if (db.EnterpriseNum == 1) LastNode = tmp[0][9];
 
-			sRoute = ShowRoute(RouteTemplate, LastRouteItem, LastNode, tmp[0][0], tc) + "<br />";
+
+
+			ShowRoute(RouteTemplate, LastRouteItem, LastNode, tmp[0][0], tc);
 
 			//####################################################################################
 
@@ -109,23 +122,32 @@ namespace Gravitas.Monitoring.Pages
 			//####################################################################################
 		}
 		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-		public  string ShowRoute(string RouteTemplateId, string LastRouteItem, string LastNode, string t, string tc)
+		public void ShowRoute(string RouteTemplateId, string LastRouteItem, string LastNode, string t, string tc)
 		{
-			if (RouteTemplateId == "") { return "No route"; }
+			if (RouteTemplateId == "") { return; }
+			List<string[]> RouteTmp = new List<string[]>();
+			List<string[]> tmp = new List<string[]>();
 			try
 			{
 				CurTC = tc;
 				CurT = t;
-				List<string[]> tmp = new List<string[]>();
+				List<string[]> tmpp = new List<string[]>();
 				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.RouteTemplates where Id = " + RouteTemplateId, ref tmp);
 				if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select * from dbo.RouteTemplate where Id = " + RouteTemplateId, ref tmp);
-				return "<hr>[" + RouteTemplateId + "] " + tmp[0][1] + "\r\n" + RouteParser(tmp[0][2]) + "<br><br>\r\nОстанній пройдений етап: [" + LastRouteItem + "] <br>\r\nОстанній пройдений вузол: [" + LastNode + "] " + GetNodeName(LastNode) + "<hr>";
+				RouteNane = "[" + RouteTemplateId + "] " + tmp[0][1];
+				LastRouteNode = LastNode;
+				LastRouteNodeName = GetNodeName(LastNode);
+				//
+				RouteParser(ref RouteTmp, tmp[0][2]);
+				Route = RouteTmp;
 			}
-			catch (Exception ex) { return "Route parse error...<br>\r\n" + "LastNode: " + LastRouteItem + "<br>\r\n" + ex.ToString(); }
+			catch (Exception ex) { /* return "Route parse error...<br>\r\n" + "LastNode: " + LastRouteItem + "<br>\r\n" + ex.ToString(); */ }
 		}
 
-		private  string RouteParser(string s)
+		private void RouteParser(ref List<string[]> lst, string s)
 		{
+			List<string[]> tmp = new List<string[]>();
+			lst.Clear();
 			string r = "";
 			int iGroup = 0;
 			string i1 = "{\"groupId\"";
@@ -135,57 +157,62 @@ namespace Gravitas.Monitoring.Pages
 				if (s.Substring(i, i1.Length) == i1) iGroup++;
 				if (s.Substring(i, i2.Length) == i2) r += iGroup + "#" + s.Substring(i + 6, 10).Split(',')[0] + "\r\n";
 			}
-
-			return RouteParserClear2(r);
+			//
+			RouteParserClear2(ref tmp, r);
+			//
+			string s0 = "";
+			string s1 = "";
+			bool fr = true;
+			foreach (string[] ss in tmp)
+			{
+				if (ss[0] != s0)
+				{
+					if (fr)
+					{
+						s1 = "";
+						fr = false;
+					}
+					else
+					{
+						lst.Add(new string[] { s0, s1 });
+						s1 = "";
+					}
+					s0 = ss[0];
+				}
+				s1 += ss[1] + "<br />";
+			}
+			lst.Add(new string[] { s0, s1 });
 		}
 
-		private  string RouteParserClear2(string s)
+		private void RouteParserClear2(ref List<string[]> lst, string s)
 		{
 			string oldGroupNum = "#";
 			s = s.Replace("\r", "");
 			s = s.Substring(0, s.Length - 1);
 			var NodeList = s.Split('\n').ToList();
-
+			//
 			string s1 = "";
 			string s2 = "";
-			string r = "<table class=\"yozhstyle1\">";
-			r += "<tr><td class=\"headercolor\">Група</td><td class=\"headercolor\">Вузли</td></tr>";
-			bool FirstRun = true;
-			int btns = 0;
+			//
 			foreach (string ss in NodeList)
 			{
 				s1 = ss.Split('#')[0];
 				s2 = ss.Split('#')[1];
 
-				if (s1 != oldGroupNum)
+				if (s2 == LastRouteNode)
 				{
-					r += (FirstRun ? "" : "</td></tr>\r\n") + "<tr><td class=\"brdr1sb\">" + s1 + "</td><td class=\"brdr1sb\">";
-					btns++;
+					lst.Add(new string[] { s1, "👉[" + s2 + "] " + GetNodeName(s2) });
+				}
+				else
+				{
+					lst.Add(new string[] { s1, "[" + s2 + "] " + GetNodeName(s2) });
 				}
 
-
-				r += "[" + s2 + "] " + GetNodeName(s2) + "<br>";
-
-
-
-				oldGroupNum = s1;
-				FirstRun = false;
 			}
-
-			r += "</td></tr>\r\n</table>";
-
-			r += "<br />Поставити авто перед групою:<br />";
-			for (int i = 0; i < btns; i++)
-			{
-				r += "<a href=\"./MoveOnRoute?t=" + CurT + "&RouteItem=" + i + "&tc=" + CurTC + "\" class=\"btn btn-primary\">" + (i + 1) + "</a>&nbsp;";
-			}
-			r += "Або&nbsp;<a href=\"./MoveOnRoute?t=" + CurT + "&RouteItem=" + btns + "&tc=" + CurTC + "\" class=\"btn btn-primary\">Завершити маршрут</a>";
-
-			return r;
 		}
 
 
-		private  string GetNodeName(string NodeId)
+		private string GetNodeName(string NodeId)
 		{
 			if (NodeId == "") return "#";
 			List<string[]> tmp = new List<string[]>();
@@ -197,9 +224,9 @@ namespace Gravitas.Monitoring.Pages
 		//#########################################################################################################################################
 
 
-		public  List<string[]> CarProgress = new List<string[]>();
+		public List<string[]> CarProgress = new List<string[]>();
 
-		public  string[] StatusNamesForNode = new string[]
+		public string[] StatusNamesForNode = new string[]
 		{
 			"",
 			"Бланк", // 1
@@ -217,14 +244,14 @@ namespace Gravitas.Monitoring.Pages
             "Перезавантаження" // 15
 		};
 
-		public  string GetNodeStatus(string id)
+		public string GetNodeStatus(string id)
 		{
 			int n = 0;
 			try { n = int.Parse(id); if (id == "") return "#"; else return "" + id + " - " + StatusNamesForNode[n]; }
 			catch { return "#: " + id; }
 		}
 
-		private  List<string> GetTList(string tc)
+		private List<string> GetTList(string tc)
 		{
 			List<string> result = new List<string>();
 			List<string[]> tmp = new List<string[]>();
@@ -237,8 +264,8 @@ namespace Gravitas.Monitoring.Pages
 		}
 
 
-		private  string sReturn = "";
-		public  string GetNodeDataByTC(string tc)
+		private string sReturn = "";
+		public string GetNodeDataByTC(string tc)
 		{
 			if (tc == "") return "";
 			List<string> tmpT = GetTList(tc);
@@ -253,7 +280,7 @@ namespace Gravitas.Monitoring.Pages
 			return sReturn;
 		}
 
-		private  void GetNodeDataByT(string t)
+		private void GetNodeDataByT(string t)
 		{
 			// 🚗🗺️🏠❤️🔨🍥🧆🧊🗽🗾♨️💈🛗🚽🪠❄️🔥💧☀️🌑🏠🏡🏚️🏘️🏟️🌏🌎🌍🌌🚦🚥📍✏️✒️🖋️🖊️🖌️🖍️📕📗📘📙📚🧮💾🪫🔋🪓🔨⛏️⚒️🛠️🔧♟️♠️♣️♥️♦️🧩🧿🎲💀☠️🔃
 			Color CapColor = Color.Lime;
@@ -443,7 +470,7 @@ namespace Gravitas.Monitoring.Pages
 
 		//###################################################################################################################
 
-		public  string GetTickets()
+		public string GetTickets()
 		{
 			List<string[]> tmp = new List<string[]>();
 			string sql = "";
@@ -453,7 +480,7 @@ namespace Gravitas.Monitoring.Pages
 			if (db.EnterpriseNum == 1) sql = "select StatusId, RoutetemplateId, RouteItemIndex, SecondaryRouteTemplateId, SecondaryRouteItemIndex, Id from dbo.Ticket where ContainerId = '" + CurTC + "'";
 			db.GetDataFromDBMSSQL(sql, ref tmp);
 
-			string r = "<br /><hr /><br /><b>Тікети(ТТН)(" + tmp.Count + ")</b><table class=\"yozhstyle1\">";
+			string r = "<br /><br /><b>Тікети(ТТН)(" + tmp.Count + ")</b><table class=\"yozhstyle1\">";
 			r += "<tr><td class=\"brdr1sb\">id</td><td class=\"brdr1sb\">Статус</td><td class=\"brdr1sb\">Маршрут</td><td class=\"brdr1sb\">Етап</td><td class=\"brdr1sb\">Доп. маршрут</td><td class=\"brdr1sb\">Доп. етап</td><td class=\"brdr1sb\">🖍️</td></tr>";
 
 			foreach (string[] s in tmp)

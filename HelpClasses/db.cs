@@ -144,7 +144,7 @@ namespace Gravitas.Monitoring.HelpClasses
 		{
 			//MessageBox.Show(sql);
 			//Console.WriteLine("SendRequestToDB: " + sql);
-			log.Add("SendRequestToDB: SQL: "+sql);
+			log.Add("SendRequestToDB: SQL: " + sql);
 			if (sql.Length == 0) return;
 			try
 			{
@@ -156,8 +156,14 @@ namespace Gravitas.Monitoring.HelpClasses
 					mysqlcmd.ExecuteNonQuery();
 				}
 				_conn.Close();
+				log.Add("SendRequestToDB: Done");
+
 			}
-			catch (Exception ex) { Console.WriteLine("SendRequestToDB Error: " + ex.ToString()); }
+			catch (Exception ex)
+			{
+				Console.WriteLine("SendRequestToDB Error: " + ex.ToString());
+				log.Add("SendRequestToDB: Error: " + ex.ToString());
+			}
 		}
 
 		/// <summary>
