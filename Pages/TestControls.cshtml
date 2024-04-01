@@ -1,11 +1,19 @@
 ﻿@page
 @model Gravitas.Monitoring.Pages.TestControlsModel
 
+
 @using Gravitas.Monitoring.Models;
 @{
 	ViewData["Title"] = "Create New Ticket";
+	int fork = 3;
 }
 <h1>Create New Ticket</h1>
+
+<form action="./TestFork" method="post">
+	<input type="hidden" asp-for="@fork" value="3" />
+	<button type="submit">aaa</button>
+</form>
+
 <h4>ticket</h4>
 <hr />
 @foreach (var tas in Model.TicketsList)

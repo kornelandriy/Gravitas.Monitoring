@@ -45,6 +45,13 @@ namespace Gravitas.Monitoring.Pages
 			string CurContext = db.GetItemData(ref tmp, CurNode, 0, 9);
 			List<string[]> tmp3 = new List<string[]>();
 			ParseNodeContext(ref tmp3, CurContext);
+
+			List<string[]> tmtList=new List<string[]>();
+			if (!string.IsNullOrEmpty(tmp3[3][1]))
+			{
+				//db.GetDataFromDBMSSQL("select StateId from dbo. ", ref tmp);
+			}
+
 			NodeContext = tmp3;
 		}
 

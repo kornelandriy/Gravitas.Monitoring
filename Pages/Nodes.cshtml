@@ -31,20 +31,23 @@
 		<button type="submit" class="btn btn-primary">🔃 Отримати дані</button>
 		*@
 		<h3>Вибраний вузол</h3>
-		<p style="font-size: 24pt;">(@Model.CurNode) - @Model.CurNodeName</p>
-		<p>Обладнання вузла</p>
+		<p style="font-size: 24pt;">(@Model.CurNode) - <a href="https://bulat.mzvkk.mhp.com.ua/Node/Routine/@Model.CurNode" class="btn btn-primary" target="_blank">➡️ @Model.CurNodeName</a></p>
+		<h4>Обладнання вузла</h4>
 		<div class="yozhstyle1" style="width: 100%; min-height: 200px; border: 1px solid black; background-color: #ffffee;">
 			@foreach (string[] nDevice in Model.CurDevices)
 			{
-				<a href="./Device?DeviceId=@nDevice[0]" class="btn btn-primary" style="margin: 2px;" title="@nDevice[0]">🛠️ @nDevice[1] </a>
+				<a href="./Device?DeviceId=@nDevice[0]" class="btn btn-primary" style="margin: 2px; min-width: 70%;" title="@nDevice[0]">🛠️ @nDevice[1] </a>
 				<br />
 			}
 		</div><br />
-		<p>Стан вузла</p>
+		<h4>Стан вузла</h4>
 		<table class="yozhstyle1" style="display: inline-block;">
 			@foreach (string[] sContext in Model.NodeContext)
 			{
-				<tr><td class="brdr1sb headercolor">@sContext[0]</td><td class="brdr1sb">@sContext[1]</td></tr>
+				if (sContext[0] != "OpDataComponentId" && sContext[0] != "OpProcessData" && sContext[0] != "ResponsibleUserId")
+				{
+					<tr><td class="brdr1sb headercolor">@sContext[0]</td><td class="brdr1sb">@sContext[1]</td></tr>
+				}
 			}
 		</table>
 		<br />

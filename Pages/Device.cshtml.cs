@@ -14,6 +14,12 @@ namespace Gravitas.Monitoring.Pages
 		public string CurDeviceURL { get; set; } = "";
 		[BindProperty]
 		public string DeviceData { get; set; } = "";
+		[BindProperty]
+		public string PingResult { get; set; } = "";
+		[BindProperty]
+		public int CmdSelector { get; set; } = 0;
+		[BindProperty]
+		public string DeviceIP { get; set; } = "";
 
 
 
@@ -24,10 +30,17 @@ namespace Gravitas.Monitoring.Pages
 			List<string[]> dtmp = new List<string[]>();
 			if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Devices where Id = '" + CurDeviceId + "'", ref dtmp);
 			CurDevice = dtmp;
+			DeviceIP = GetIPFromTag(CurDevice[0][5]);
+			if (!IsIP(DeviceIP))
+			{
+				List<string[]> tmppd = new List<string[]>();
+				db.GetDataFromDBMSSQL("select * from dbo.Devices where Id = '" + CurDevice[0][1] + "'", ref tmppd);
+				DeviceIP = GetIPFromTag(tmppd[0][5]);
+			}
 			GetDeviceUrl();
 		}
 
-		public void OnGet() 
+		public void OnGet()
 		{
 			PrepareAll();
 		}
@@ -35,7 +48,18 @@ namespace Gravitas.Monitoring.Pages
 		public void OnPost()
 		{
 			PrepareAll();
-			DeviceData=GetDeviceData(CurDeviceId);
+
+			switch (CmdSelector)
+			{
+				case 0:
+					DeviceData = GetDeviceData(CurDeviceId);
+					break;
+				case 1:
+					PingResult = Pingalka.Test(DeviceIP);
+					break;
+			}
+
+
 		}
 
 		private void GetDeviceUrl()
@@ -65,7 +89,7 @@ namespace Gravitas.Monitoring.Pages
 					case "16":
 					case "17":
 					case "31":
-						CurDeviceURL = "http://admin:Qq123123123@" + IP;
+						CurDeviceURL = "http://" + IP;
 						break;
 					default:
 						CurDeviceURL = "http://" + IP;
