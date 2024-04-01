@@ -4,25 +4,28 @@
 @{
 	ViewData["Title"] = "Автівки";
 }
-<form method="post" style="box-shadow: 10px 5px 5px rgba(0,0,0,0.3); border: 1px solid black; padding: 5px; margin-top: 5px;">
-	<div class="form-group" style="display: block;">
-		<input type="checkbox" asp-for="f1" /><label asp-for="f1" class="control-label">1 - Новий</label>
-		<input type="checkbox" asp-for="f2" /><label asp-for="f2" class="control-label">2 - В обробці</label>
-		<input type="checkbox" asp-for="f3" /><label asp-for="f3" class="control-label">3 - Доопрацювання</label>
-		<input type="checkbox" asp-for="f4" /><label asp-for="f4" class="control-label">4 - В роботі</label>
-		<input type="checkbox" asp-for="f5" /><label asp-for="f5" class="control-label">5 - Завершено</label>
-		<input type="checkbox" asp-for="f6" /><label asp-for="f6" class="control-label">6 - Проведено</label>
-		<input type="checkbox" asp-for="f10" /><label asp-for="f10" class="control-label">10 - Відхилено</label>
-	</div>
-	<div class="form-group">
-		<label asp-for="fDate" class="control-label">Дата</label><input type="date" asp-for="fDate" />
-		<input type="checkbox" asp-for="fOneDay" /><label asp-for="fOneDay" class="control-label">Одна доба</label>
-	</div>
-	<div class="form-group">
-		<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" />
-		<input type="submit" value="Знайти" class="btn btn-success" />
-	</div>
-</form>
+<div class="yozhstyle1" style="display; inline-block; margin-top: 3px;">
+
+	<form method="post">
+		<div class="form-group" style="display: block;">
+			<input type="checkbox" asp-for="f1" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f1" class="control-label">1 - Новий</label>
+			<input type="checkbox" asp-for="f2" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f2" class="control-label">2 - В обробці</label>
+			<input type="checkbox" asp-for="f3" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f3" class="control-label">3 - Доопрацювання</label>
+			<input type="checkbox" asp-for="f4" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f4" class="control-label">4 - В роботі</label>
+			<input type="checkbox" asp-for="f5" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f5" class="control-label">5 - Завершено</label>
+			<input type="checkbox" asp-for="f6" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f6" class="control-label">6 - Проведено</label>
+			<input type="checkbox" asp-for="f10" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f10" class="control-label">10 - Відхилено</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="fDate" class="control-label">Дата</label><input type="date" asp-for="fDate" />
+			<input type="checkbox" asp-for="fOneDay" /><label asp-for="fOneDay" class="control-label">Одна доба</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" />
+			<input type="submit" value="🔍 Знайти" class="btn btn-success" />
+		</div>
+	</form>
+</div>
 <div>
 	@if (Model.lstData.Count > 0)
 	{
