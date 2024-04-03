@@ -16,6 +16,8 @@ namespace Gravitas.Monitoring.Pages
 		public string CurNodeName { get; set; } = "";
 		[BindProperty]
 		public List<string[]> NodeContext { get; set; } = new List<string[]>();
+		[BindProperty]
+		public List<string> SelectedNode { get; set; } = new List<string>();
 		//
 		private void GetData()
 		{
@@ -32,6 +34,18 @@ namespace Gravitas.Monitoring.Pages
 		public void OnPost()
 		{
 			GetData();
+			foreach (string[] s in nodes)
+			{
+				if (s[0] == CurNode)
+				{
+					SelectedNode = s.ToList();
+					break;
+				}
+			}
+
+
+
+
 			List<string[]> tmp = new List<string[]>();
 			tmp = nodes;
 			string NodeParams = db.GetItemData(ref tmp, CurNode, 0, 8);
@@ -46,11 +60,15 @@ namespace Gravitas.Monitoring.Pages
 			List<string[]> tmp3 = new List<string[]>();
 			ParseNodeContext(ref tmp3, CurContext);
 
-			List<string[]> tmtList=new List<string[]>();
+			List<string[]> tmtList = new List<string[]>();
 			if (!string.IsNullOrEmpty(tmp3[3][1]))
 			{
 				//db.GetDataFromDBMSSQL("select StateId from dbo. ", ref tmp);
 			}
+
+
+			tmp3.Add(new string[] { "Тип вузла", SelectedNode[2] });
+
 
 			NodeContext = tmp3;
 		}

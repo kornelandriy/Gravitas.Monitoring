@@ -39,32 +39,14 @@ namespace Gravitas.Monitoring.Pages
 		[BindProperty]
 		public string cnt { get; set; } = "";
 
-
-
 		//======================================================================
 
 		public void OnGet() { }
 
 		public void OnPost()
 		{
-
 			if (CarNum.IsNullOrEmpty()) CarNum = "";
-
 			List<string[]> lst = new List<string[]>();
-
-			//string CarNo = HttpContext.Request.Query["CarNum"].ToString();
-			//
-			//string f1 = HttpContext.Request.Query["chk1"].ToString();
-			//string f2 = HttpContext.Request.Query["chk2"].ToString();
-			//string f3 = HttpContext.Request.Query["chk3"].ToString();
-			//string f4 = HttpContext.Request.Query["chk4"].ToString();
-			//string f5 = HttpContext.Request.Query["chk5"].ToString();
-			//string f6 = HttpContext.Request.Query["chk6"].ToString();
-			//string f10 = HttpContext.Request.Query["chk10"].ToString();
-			//
-			//string fDate = HttpContext.Request.Query["Date"].ToString();
-			//
-
 			//
 			if (!f1 && !f2 && !f3 && !f4 && !f5 && !f6 && !f10)
 			{
@@ -90,11 +72,9 @@ namespace Gravitas.Monitoring.Pages
 			StateFilter = StateFilter.Substring(0, StateFilter.Length - 1);
 			ssFilter = ssFilter.Substring(0, ssFilter.Length - 4);
 
-			//DateTime dt = DateTime.Parse(fDate);
 			DateTime dt = fDate;
 			DateTime dt2 = dt;
-			// DateTime dt1 = chkCurDate.Checked ? dt : dt.AddDays(-1); // Nada vidnovyty
-			DateTime dt1 = dt.AddDays(-1);
+			DateTime dt1 = dt.AddDays(-1); // Доробить 1 або 2 доби...
 			//
 			int d = dt1.Day;
 			int m = dt1.Month;
@@ -130,16 +110,9 @@ namespace Gravitas.Monitoring.Pages
 				"order by opd.SingleWindowOpData.RegistrationDateTime";
 
 			SQLString = sql;
-
 			db.GetDataFromDBMSSQL(sql, ref lst);
-
 			List<string[]> NewData = new List<string[]>();
-
-
 			cnt = "";
-
-			//string[] sMas = GetCarsFilter();
-			//string[] sMas = "1,2,3,4,5".Split(',');
 			string tmpCarNum = "";
 			if (db.EnterpriseNum == 0) // MZVKK
 			{
@@ -201,22 +174,6 @@ namespace Gravitas.Monitoring.Pages
 					}
 				}
 			}
-
-			//lst = NewData;
-			//lblCount.Text = "Знайдено " + NewData.Count + " авто";
-			//string str = "";
-			//foreach (string[] s in NewData)
-			//{
-			//	str += "<table class=\"yozhstyle1\">";
-			//	str += "<tr><td class=\"brdr1sb headercolor\">Картка</td><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb headercolor\">Авто</td><td class=\"brdr1sb\">" + s[2] + "</td><tr></td></tr>";
-			//	str += "<tr><td class=\"brdr1sb headercolor\">Номенклатура</td><td colspan=\"3\" class=\"brdr1sb\">" + s[3] + "</dt><tr></td></tr>";
-			//	str += "<tr><td class=\"brdr1sb headercolor\">Маршрут</td><td colspan=\"3\" class=\"brdr1sb\">" + s[4] + "</dt><tr></td></tr>";
-			//	str += "<tr><td class=\"brdr1sb headercolor\">Вікно</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb headercolor\">Етап</td><td class=\"brdr1sb\">" + s[5] + "</td><tr></td></tr>";
-			//	str += "<tr><td class=\"brdr1sb headercolor\">ТікетКонтейнер</td><td class=\"brdr1sb\">" + s[7] + "</td><td class=\"brdr1sb headercolor\">Тікетів</td><td class=\"brdr1sb\">" + s[6] + "</td><tr></td></tr>";
-			//	str += "<tr><td class=\"brdr1sb headercolor\">Реєстрація</td><td class=\"brdr1sb\">" + s[8] + "</td><td class=\"brdr1sb headercolor\">Виїзд</td><td class=\"brdr1sb\">" + s[9] + "</td><td><a href=\"./CarInfo?tc=" + s[7] + "\" class=\"btn btn-primary\">&raquo;</a></td></tr>";
-			//	str += "</table><br>";
-			//}
-			//st = "<div style=\"height: 100%; overflow: auto;\">" + str + "</div>";
 		}
 
 		private string GetStatusNamebyId(string id)
@@ -248,6 +205,5 @@ namespace Gravitas.Monitoring.Pages
 			}
 			return r;
 		}
-
 	}
 }

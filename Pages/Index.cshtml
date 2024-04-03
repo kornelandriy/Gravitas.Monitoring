@@ -26,10 +26,10 @@
 			<br />
 			<div class="row yozhstyle1">
 				<div class="col-4">
-					<a href="./CarList" class="display-2 btn btn-primary" style="display:block;">Авто</a>
+					<a href="./CarList" class="display-2 btn btn-primary" style="display:block;">🚚 Авто</a>
 				</div>
 				<div class="col-4">
-					<a href="./CardList" class="display-2 btn btn-primary" style="display:block;">Картки</a>
+					<a href="./CardList" class="display-2 btn btn-primary" style="display:block;">⬜ Картки</a>
 				</div>
 				<div class="col-4">
 					<a href="./Nodes" class="display-2 btn btn-primary" style="display:block;">Вузли</a>
@@ -37,10 +37,18 @@
 			</div>
 		}
 
+		@if (User.IsInRole(UserRoles.Admin))
+		{
+			<div class="row yozhstyle1" style="margin-top: 40px;">
+				<div class="col-4">
+					<a href="#" class="display-2 btn btn-primary" style="display:block;">Ролі</a>
+				</div>
+			</div>
+		}
+
 		@if (User.IsInRole(UserRoles.Modifier))
 		{
 			Groups += "Редактори<br />";
-
 		}
 	}
 </div>

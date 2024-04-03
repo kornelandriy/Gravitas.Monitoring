@@ -4,28 +4,31 @@
 @{
 	ViewData["Title"] = "Автівки";
 }
-<div class="yozhstyle1" style="display; inline-block; margin-top: 3px;">
-
-	<form method="post">
-		<div class="form-group" style="display: block;">
-			<input type="checkbox" asp-for="f1" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f1" class="control-label">1 - Новий</label>
-			<input type="checkbox" asp-for="f2" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f2" class="control-label">2 - В обробці</label>
-			<input type="checkbox" asp-for="f3" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f3" class="control-label">3 - Доопрацювання</label>
+<form method="post">
+	<div class="row yozhstyle1" style="margin-top: 3px;">
+		<div class="col-2">
+			<input type="checkbox" asp-for="f1" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f1" class="control-label">1 - Новий</label><br />
+			<input type="checkbox" asp-for="f2" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f2" class="control-label">2 - В обробці</label><br />
+			<input type="checkbox" asp-for="f3" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f3" class="control-label">3 - Доопрацювання</label><br />
 			<input type="checkbox" asp-for="f4" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f4" class="control-label">4 - В роботі</label>
-			<input type="checkbox" asp-for="f5" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f5" class="control-label">5 - Завершено</label>
-			<input type="checkbox" asp-for="f6" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f6" class="control-label">6 - Проведено</label>
+		</div>
+		<div class="col-2">
+			<input type="checkbox" asp-for="f5" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f5" class="control-label">5 - Завершено</label><br />
+			<input type="checkbox" asp-for="f6" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f6" class="control-label">6 - Проведено</label><br />
 			<input type="checkbox" asp-for="f10" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f10" class="control-label">10 - Відхилено</label>
 		</div>
-		<div class="form-group">
-			<label asp-for="fDate" class="control-label">Дата</label><input type="date" asp-for="fDate" />
+		<div class="col-2">
+			<label asp-for="fDate" class="control-label">Дата</label><br /><input type="date" asp-for="fDate" class="w-100" /><br />
 			<input type="checkbox" asp-for="fOneDay" /><label asp-for="fOneDay" class="control-label">Одна доба</label>
 		</div>
-		<div class="form-group">
-			<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" />
-			<input type="submit" value="🔍 Знайти" class="btn btn-success" />
+		<div class="col-2">
+			<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" class="w-100" />
 		</div>
-	</form>
-</div>
+		<div class="col-2">
+			<input type="submit" value="🔍 Знайти" class="btn btn-success w-100" />
+		</div>
+	</div>
+</form>
 <div>
 	@if (Model.lstData.Count > 0)
 	{
@@ -39,7 +42,7 @@
 @foreach (string[] s in Model.lstData)
 {
 	<br />
-	<table class="yozhstyle1" style="box-shadow: 10px 5px 5px rgba(0,0,0,0.3); display: inline-block;">
+	<table class="yozhstyle1" style="box-shadow: 10px 5px 5px rgba(0,0,0,0.3); display: inline-block; margin-top: 5px;">
 		<tr>
 			<td class="brdr1sb headercolor">Картка (Тікетів)</td>
 			<td class="brdr1sb">@s[0] (@s[6])</td>
@@ -55,12 +58,10 @@
 		<tr>
 			<td class="brdr1sb headercolor">Номенклатура</td>
 			<td colspan="3" class="brdr1sb">@s[3]</td>
-
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">Маршрут</td>
 			<td colspan="3" class="brdr1sb">@s[4]</td>
-
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">Вікно</td>
