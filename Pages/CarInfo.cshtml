@@ -6,11 +6,14 @@
 	bool fr = true;
 	string g = "0";
 }
-<p style=" margin-top: 5px;">
-	<a href="./CarList" class="btn btn-primary">⏪ Назад до списку авто</a>
-	<a href="./Replacelabel?tc=@Model.CurTC" class="btn btn-primary">🔍 Пошук міток</a>
-</p>
-
+<pdiv class="row" style="margin-top:3px; margin-bottom: 5px;">
+	<div class="col-3">
+		<a href="./CarList" class="btn btn-primary w-100">⏪ Назад до списку авто</a>
+	</div>
+	<div class="col-3">
+		<a href="./Replacelabel?tc=@Model.CurTC" class="btn btn-primary w-100">🔍 Пошук міток</a>
+	</div>
+</pdiv>
 <duv class="row">
 	<div class="col-6">
 		<h3>Маршрут</h3>
@@ -62,7 +65,7 @@
 	<br />
 	<h3>Проходження вузлів на маршруті</h3>
 	<div style="overflow: auto;">
-		<table Class="yozhstyle1" style="display: inline-block;">
+		<table Class="yozhstyle1" style="display: inline-block; margin-bottom: 8px;">
 			@{
 				int c = 0;
 			}
@@ -89,12 +92,40 @@
 			}
 		</table>
 	</div>
-</div><br />
+</div>
+<br />
 <div class="row">
 	<br />
 	<br />
 	<h3>Тікети</h3>
-	@Html.Raw(Model.sTickets)
+
+
+	<br /><br /><b>Тікети(ТТН)(@Model.TicketsList.Count)</b>
+	<table class="yozhstyle1" style="display:block;">
+		<tr>
+			<td class="brdr1sb headercolor">id</td>
+			<td class="brdr1sb headercolor">Статус</td>
+			<td class="brdr1sb headercolor">Маршрут</td>
+			<td class="brdr1sb headercolor">Етап</td>
+			<td class="brdr1sb headercolor">Доп. маршрут</td>
+			<td class="brdr1sb headercolor">Доп. етап</td>
+			<td class="brdr1sb headercolor">✏️</td>
+		</tr>
+		@foreach (string[] s in Model.TicketsList)
+		{
+			<tr>
+				<td class="brdr1sb">@s[5]</td>
+				<td class="brdr1sb">@s[0]</td>
+				<td class="brdr1sb">@s[1]</td>
+				<td class="brdr1sb">@s[2]</td>
+				<td class="brdr1sb">@s[3]</td>
+				<td class="brdr1sb">@s[4]</td>
+				<td class="brdr1sb"><a href="./TicketEdit?t=@s[5]" class="btn btn-primary">✏️</a></td>
+			</tr>
+		}
+	</table>
+
+
 </div>
 <br />
 <a href="./CarList" class="btn btn-primary">⏪ Назад до списку авто</a>

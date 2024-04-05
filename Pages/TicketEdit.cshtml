@@ -12,6 +12,7 @@
 	{
 		<center><h3>Параметри тікета: </h3><h2>@Model.t</h2></center>
 		<form method="post">
+			<input type="hidden" asp-for=TC />
 			<div class="row">
 				<div class="col-3"></div>
 				<div class="col-3">
@@ -31,10 +32,10 @@
 					<center>
 						<p>Якщо Додатковий маршрут не вказаний то поле SecondaryRoutrTemplateId слід залишати пустим... </p>
 						<div class="col-3">
-						<button type="submit" class="btn btn-primary" style="width: 100%; margin: 2px;">💾 Зберегти</button>
-						<br />
+							<button type="submit" class="btn btn-primary" style="width: 100%; margin: 2px;">💾 Зберегти</button>
+							<br />
 							<a href="./CarInfo?tc=@Model.TC" class="btn btn-primary" style="width: 100%; margin: 2px;">⏪ Назад до авто</a>
-						<br /><br />
+							<br /><br />
 						</div>
 						@Model.Result
 					</center>

@@ -43,7 +43,7 @@
 		Selected += "<tr><th class=\"brdr1sb headercolor\">Ідентифікатор</th><th class=\"brdr1sb headercolor\">Номер</th><th class=\"brdr1sb headercolor\">Стан</th><th class=\"brdr1sb headercolor\">Тікет контейнер</th><th class=\"brdr1sb headercolor\">Користувач</th></tr>";
 		foreach (string[] s in lst)
 		{
-			Selected += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\">" + s[2] + "</td><td class=\"brdr1sb\">" + s[3] + "</td><td class=\"brdr1sb\">" + s[4] + "</td><td><a class=\"btn btn-primary\" href=\"./CardInfo?CardId="+s[0]+"\">🖍️</a></td></tr>";
+			Selected += "<tr><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\">" + s[2] + "</td><td class=\"brdr1sb\">" + s[3] + "</td><td class=\"brdr1sb\">" + s[4] + "</td><td><a class=\"btn btn-primary\" href=\"./CardInfo?CardId=" + s[0] + "\">✏️</a></td></tr>";
 		}
 		Selected += "</table";
 	}

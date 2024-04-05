@@ -10,10 +10,10 @@ namespace Gravitas.Monitoring.Pages
 		public string CurTC = "";
 		private string CurT = "";
 
+
 		[BindProperty]
 		public string tc { get; set; } = "";
 		[BindProperty]
-		//##################################################################################################################################
 		public List<string[]> Route { get; set; } = new List<string[]>();
 		[BindProperty]
 		public string RouteNane { get; set; } = "";
@@ -27,29 +27,19 @@ namespace Gravitas.Monitoring.Pages
 		public List<string[]> CarProgress { get; set; } = new List<string[]>();
 		[BindProperty]
 		public bool FrCarProgress { get; set; } = true;
+		[BindProperty]
+		public List<string[]> TicketsList { get; set; } = new List<string[]>();
+
 		//##################################################################################################################################
-		
-
-
-
-
-
 
 		public string sNodes = "";
 		public string sTickets = "";
-
 		public string RouteTemplate = "";
-
-
-		//string tc = HttpContext.Request.Query["tc"].ToString();
-
-
 		public string CarCards = "";
 
 		//####################################################################################
 
 		List<string[]> cards = new List<string[]>();
-
 		[BindProperty]
 		public List<string[]> lst1 { get; set; } = new List<string[]>(); // 2
 		[BindProperty]
@@ -59,22 +49,14 @@ namespace Gravitas.Monitoring.Pages
 
 		//#################################################################
 
-
 		public void OnGet()
 		{
-
 			tc = HttpContext.Request.Query["tc"].ToString();
-
-
-
-			//this.tc = tc;
 			CurTC = tc;
-
 			try
 			{
 				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Cards where TicketContainerId = " + tc, ref cards);
 				if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select * from dbo.Card where TicketContainerId = " + tc, ref cards);
-
 				foreach (string[] s in cards)
 				{
 					switch (s[1])
@@ -90,12 +72,8 @@ namespace Gravitas.Monitoring.Pages
 							break;
 					}
 				}
-
-
-				//CarCards = st;
 			}
 			catch { CarCards = "Не вдалося отримати дані про картки..."; }
-
 			//####################################################################################
 			string LastNode = "";
 			List<string[]> tmp = new List<string[]>();
@@ -110,9 +88,7 @@ namespace Gravitas.Monitoring.Pages
 			//
 			if (db.EnterpriseNum == 0) LastNode = tmp[0][9];
 			if (db.EnterpriseNum == 1) LastNode = tmp[0][9];
-
-
-
+			//
 			ShowRoute(RouteTemplate, LastRouteItem, LastNode, tmp[0][0], tc);
 
 			//####################################################################################
@@ -475,21 +451,25 @@ namespace Gravitas.Monitoring.Pages
 			List<string[]> tmp = new List<string[]>();
 			string sql = "";
 
-
 			if (db.EnterpriseNum == 0) sql = "select StatusId, RoutetemplateId, RouteItemIndex, SecondaryRouteTemplateId, SecondaryRouteItemIndex, Id from dbo.Tickets where TicketContainerId = '" + CurTC + "'";
 			if (db.EnterpriseNum == 1) sql = "select StatusId, RoutetemplateId, RouteItemIndex, SecondaryRouteTemplateId, SecondaryRouteItemIndex, Id from dbo.Ticket where ContainerId = '" + CurTC + "'";
 			db.GetDataFromDBMSSQL(sql, ref tmp);
 
-			string r = "<br /><br /><b>Тікети(ТТН)(" + tmp.Count + ")</b><table class=\"yozhstyle1\">";
-			r += "<tr><td class=\"brdr1sb\">id</td><td class=\"brdr1sb\">Статус</td><td class=\"brdr1sb\">Маршрут</td><td class=\"brdr1sb\">Етап</td><td class=\"brdr1sb\">Доп. маршрут</td><td class=\"brdr1sb\">Доп. етап</td><td class=\"brdr1sb\">🖍️</td></tr>";
+			TicketsList = tmp;
 
-			foreach (string[] s in tmp)
-			{
-				r += "<tr><td class=\"brdr1sb\">" + s[5] + "</td><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\">" + s[2] + "</td><td class=\"brdr1sb\">" + s[3] + "</td><td class=\"brdr1sb\">" + s[4] + "</td><td class=\"brdr1sb\"><a href=\"./TicketEdit?t=" + s[5] + "\" class=\"btn btn-primary\">🖍️</a></td></tr>";
-			}
-			r += "</table>";
 
-			return r;
+
+			//string r = "<br /><br /><b>Тікети(ТТН)(" + tmp.Count + ")</b><table class=\"yozhstyle1\">";
+			//r += "<tr><td class=\"brdr1sb\">id</td><td class=\"brdr1sb\">Статус</td><td class=\"brdr1sb\">Маршрут</td><td class=\"brdr1sb\">Етап</td><td class=\"brdr1sb\">Доп. маршрут</td><td class=\"brdr1sb\">Доп. етап</td><td class=\"brdr1sb\">🖍️</td></tr>";
+
+			//foreach (string[] s in tmp)
+			//{
+			//	r += "<tr><td class=\"brdr1sb\">" + s[5] + "</td><td class=\"brdr1sb\">" + s[0] + "</td><td class=\"brdr1sb\">" + s[1] + "</td><td class=\"brdr1sb\">" + s[2] + "</td><td class=\"brdr1sb\">" + s[3] + "</td><td class=\"brdr1sb\">" + s[4] + "</td><td class=\"brdr1sb\"><a href=\"./TicketEdit?t=" + s[5] + "\" class=\"btn btn-primary\">🖍️</a></td></tr>";
+			//}
+			//r += "</table>";
+
+			//return r;
+			return "Done";
 		}
 
 

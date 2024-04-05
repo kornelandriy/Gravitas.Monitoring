@@ -47,17 +47,18 @@ namespace Gravitas.Monitoring.Pages
 			if (string.IsNullOrEmpty(SRTI)) tmpSRTI = "NULL"; else tmpSRTI = "'" + SRTI + "'";
 			string sql = "";
 			if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set StatusId='" + SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
-			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set StatusId='" + SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
+			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set StatusId='" +  SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
 			//Result = sql + " - ";
 			try
 			{
 				db.SendRequestToDB(sql);
-				Result = "Виконано...";
+				Result = "Зміни збережено...";
 			}
 			catch (Exception ex)
 			{
 				Result = "Помилка: " + ex.ToString();
 			}
+
 		}
 	}
 }
