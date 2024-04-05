@@ -23,8 +23,12 @@ namespace Gravitas.Monitoring.Pages
 		public string LastRouteNode { get; set; } = "";
 		[BindProperty]
 		public string LastRouteNodeName { get; set; } = "";
+		[BindProperty]
+		public List<string[]> CarProgress { get; set; } = new List<string[]>();
+		[BindProperty]
+		public bool FrCarProgress { get; set; } = true;
 		//##################################################################################################################################
-
+		
 
 
 
@@ -223,9 +227,6 @@ namespace Gravitas.Monitoring.Pages
 
 		//#########################################################################################################################################
 
-
-		public List<string[]> CarProgress = new List<string[]>();
-
 		public string[] StatusNamesForNode = new string[]
 		{
 			"",
@@ -300,10 +301,8 @@ namespace Gravitas.Monitoring.Pages
 					if (db.EnterpriseNum == 1) TableName = "opd.SecurityCheckInOpData";
 					CarProgress.Add(new string[] { TableName, "КПП Заїзд" });
 					foreach (string[] s in tmp)
-					{ // 
-					  //string sas = "<a href=\".ChangeStateId?id=" + s[0] + "&StateId=" + s[1] +"&tc="+CurTC+"&TableName="+TableName+"&NodeName="+ GetNodeName(s[2]) + "\">"+ GetNodeStatus(s[1]) + "</a>";
+					{
 						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
-						//CarProgress.Add(new string[] { s[0], "<a href=\"./\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 				//---------------------------------------------- Vizir / Lab
@@ -451,21 +450,22 @@ namespace Gravitas.Monitoring.Pages
 			}
 			catch (Exception ex) { sReturn = "Etap: " + Etap + "\r\n\r\n" + ex.ToString(); }
 
-			string str = "<table Class=\"yozhstyle1\">\r\n";
-			string st = "";
+			//string str = "<table Class=\"yozhstyle1\">\r\n";
+			//string st = "";
 
-			foreach (string[] s in CarProgress)
-			{
-				st = "<tr>";
-				foreach (string ss in s)
-				{
-					st += "<td class=\"brdr1sb\">" + ss + "</td>";
-				}
-				st += "</tr>\r\n";
-				str += st;
-			}
-			str += "</table>\r\n";
-			sReturn = "<div style=\"overflow: auto;\">" + str + "</div>";
+			//foreach (string[] s in CarProgress)
+			//{
+			//	st = "<tr>";
+			//	foreach (string ss in s)
+			//	{
+			//		st += "<td class=\"brdr1sb\">" + ss + "</td>";
+			//	}
+			//	st += "</tr>\r\n";
+			//	str += st;
+			//}
+			//str += "</table>\r\n";
+			//sReturn = "<div style=\"overflow: auto;\">" + str + "</div>";
+			sReturn = "Done";
 		}
 
 		//###################################################################################################################

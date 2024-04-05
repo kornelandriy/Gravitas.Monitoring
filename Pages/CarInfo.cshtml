@@ -61,8 +61,35 @@
 	<br />
 	<br />
 	<h3>Проходження вузлів на маршруті</h3>
-	@Html.Raw(Model.sNodes)
-</div>
+	<div style="overflow: auto;">
+		<table Class="yozhstyle1" style="display: inline-block;">
+			@{
+				int c = 0;
+			}
+			@foreach (string[] s in Model.CarProgress)
+			{
+				<tr>
+					@foreach (string ss in s)
+					{
+						@if (c == 0)
+						{
+							<td class="brdr1sb headercolor">
+								@Html.Raw(ss)
+							</td>
+						}
+						else
+						{
+							<td class="brdr1sb">
+								@Html.Raw(ss)
+							</td>
+						}
+					}
+				</tr>
+				c++;
+			}
+		</table>
+	</div>
+</div><br />
 <div class="row">
 	<br />
 	<br />
