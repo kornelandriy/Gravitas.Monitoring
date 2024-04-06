@@ -179,7 +179,7 @@ namespace Gravitas.Monitoring.Pages
 				s1 = ss.Split('#')[0];
 				s2 = ss.Split('#')[1];
 
-				if (s2 == LastRouteNode)
+				if (s1 == LastRouteItem && s2 == LastRouteNode)
 				{
 					lst.Add(new string[] { s1, "👉[" + s2 + "] " + GetNodeName(s2) });
 				}
