@@ -24,20 +24,13 @@
 				</form>
 			}
 		</div>
-
 		<center>
 			<br />
 			<br />
 			<a href="./" class="btn btn-primary w-50">⏪ Назад до панелі</a><br />
 		</center>
-
-
 	</div>
 	<div class="col-6">
-		@*
-		<input type="hidden" asp-for="CurNode" />
-		<button type="submit" class="btn btn-primary">🔃 Отримати дані</button>
-		*@
 		<h3>Вибраний вузол</h3>
 		<p style="font-size: 24pt;">(@Model.CurNode) - <a href="https://bulat.mzvkk.mhp.com.ua/Node/Routine/@Model.CurNode" class="btn btn-primary" target="_blank">➡️ @Model.CurNodeName</a></p>
 		<h4>Обладнання вузла</h4>
@@ -59,5 +52,9 @@
 			}
 		</table>
 		<br />
+		@if (!string.IsNullOrEmpty(Model.wndCLR))
+		{
+			<a href="./ClearNode?NodeId=@Model.CurNode" class="btn btn-primary w-100">🧼 Скинути вузол</a>
+		}
 	</div>
 </div>

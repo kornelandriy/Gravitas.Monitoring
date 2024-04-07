@@ -1,4 +1,5 @@
 using System.Net.NetworkInformation;
+using Gravitas.Monitoring.HelpClasses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NuGet.Protocol.Plugins;
@@ -47,15 +48,17 @@ namespace Gravitas.Monitoring.Pages
 			try
 			{
 				HelpClasses.db.SendRequestToDB(sql);
+				log.Add("User: " + User.Identity.Name + " ChangeStateId new data (TableName: " + TableName + " Id: " + id + " StateId: " + NewStateId + ")");
 				Result = "Виконано... новий статус - " + GetNodeStatus(NewStateId);
 				RedirectToPage("CarInfo?tc=" + tc);
 			}
-			catch
+			catch (Exception ex)
 			{
+				log.Add("User: " + User.Identity.Name + " ChangeStateId  Error: " + ex.ToString());
 				Result = "Помилка";
 			}
 		}
-		
+
 		public string[] StatusNamesForNode = new string[]
 				{
 			"",

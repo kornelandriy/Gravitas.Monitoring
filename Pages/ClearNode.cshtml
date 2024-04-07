@@ -1,0 +1,22 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.ClearNodeModel
+@{
+
+}
+<div class="row">
+	<div class="col-12">
+
+		<h3>Вузол @Model.NodeId<br /><b>@Model.NodeName</b></h3>
+		<br />
+		<form method="post">
+			<input type="hidden" asp-for=NodeId />
+			<input type="hidden" asp-for=NodeType />
+			<button type="submit" class="btn btn-primary">Очистити</button>
+		</form>
+		<br /><a href="./Nodes" class="btn btn-primary">Назад до вузлів</a>
+
+	</div>
+</div>
+<br />
+@Html.Raw(Model.Result)
+

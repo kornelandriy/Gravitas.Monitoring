@@ -170,10 +170,7 @@ namespace Gravitas.Monitoring.Pages
 
 		public string TestProc(string lbl)
 		{
-
 			log.Add("TestProc: " + lbl);
-
-
 			return "Ass";// Page();
 		}
 	}

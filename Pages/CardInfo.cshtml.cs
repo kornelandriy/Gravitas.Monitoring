@@ -2,6 +2,7 @@ using Gravitas.Monitoring.HelpClasses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NuGet.Protocol;
 
 namespace Gravitas.Monitoring.Pages
 {
@@ -22,7 +23,6 @@ namespace Gravitas.Monitoring.Pages
 		{
 			CardId = HttpContext.Request.Query["CardId"].ToString();
 			GetCardData();
-
 		}
 
 		public void OnPost()
@@ -60,11 +60,13 @@ namespace Gravitas.Monitoring.Pages
 			try
 			{
 				db.SendRequestToDB(sql);
+				log.Add("User: " + User.Identity.Name + " CardEdit new data (Id: " + CardId + " TicketContainer: " + _tc + " EmployeeId: " + _UserId + ")");
 				Result = "Збережено...";
-				//Result = "sql: " + sql;
+
 			}
 			catch (Exception ex)
 			{
+				log.Add("User: " + User.Identity.Name + " CardEdit Error:" + ex.ToString());
 				Result = "Помилка: " + ex.ToString();
 			}
 		}

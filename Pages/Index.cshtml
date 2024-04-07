@@ -14,9 +14,7 @@
 		@if (User.IsInRole(UserRoles.Admin))
 		{
 			Groups += "Адміністратори<br />";
-			<div>
-				@*<a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для адміна</a>*@
-			</div>
+			@*<div><a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для адміна</a></div>*@
 		}
 
 		@if (User.IsInRole(UserRoles.Modifier))
@@ -42,15 +40,16 @@
 			</div>
 		}
 
-		@if (User.IsInRole(UserRoles.Admin))
-		{
-			<div class="row yozhstyle1" style="margin-top: 40px;">
-				<div class="col-4">
-					<a href="#" class="btn btn-primary w-100" style="font-size: 16pt;">👥 Ролі</a>
-				</div>
-			</div>
-		}
-
+		@*
+	@if (User.IsInRole(UserRoles.Admin))
+	{
+	<div class="row yozhstyle1" style="margin-top: 40px;">
+	<div class="col-4">
+	<a href="#" class="btn btn-primary w-100" style="font-size: 16pt;">👥 Ролі</a>
+	</div>
+	</div>
+	}
+	*@
 	}
 </div>
 <div style="margin-top: 100px;">

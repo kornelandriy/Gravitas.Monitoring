@@ -18,6 +18,8 @@ namespace Gravitas.Monitoring.Pages
 		public List<string[]> NodeContext { get; set; } = new List<string[]>();
 		[BindProperty]
 		public List<string> SelectedNode { get; set; } = new List<string>();
+		[BindProperty]
+		public string wndCLR { get; set; } = "";
 		//
 		private void GetData()
 		{
@@ -29,11 +31,19 @@ namespace Gravitas.Monitoring.Pages
 		public void OnGet()
 		{
 			GetData();
+			CurNode = nodes[0][0];
+			ShowInfo();
 		}
 
 		public void OnPost()
 		{
 			GetData();
+			ShowInfo();
+		}
+
+
+		private void ShowInfo()
+		{
 			foreach (string[] s in nodes)
 			{
 				if (s[0] == CurNode)
@@ -43,8 +53,14 @@ namespace Gravitas.Monitoring.Pages
 				}
 			}
 
-
-
+			if (SelectedNode[2] == "1")
+			{
+				wndCLR = SelectedNode[0];
+			}
+			else
+			{
+				wndCLR = "";
+			}
 
 			List<string[]> tmp = new List<string[]>();
 			tmp = nodes;

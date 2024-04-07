@@ -47,18 +47,18 @@ namespace Gravitas.Monitoring.Pages
 			if (string.IsNullOrEmpty(SRTI)) tmpSRTI = "NULL"; else tmpSRTI = "'" + SRTI + "'";
 			string sql = "";
 			if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set StatusId='" + SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
-			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set StatusId='" +  SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
-			//Result = sql + " - ";
+			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set  StatusId='" + SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
 			try
 			{
 				db.SendRequestToDB(sql);
+				log.Add("User: " + User.Identity.Name + " TicketEdit new data (Id: " + t + " StatusId: " + SI + " RouteTemplateId: " + RTI + " RouteItemIndex: " + RII + " SecondaryRouteTemplateId: " + tmpSRTI + " SecondaryRouteItemIndex: " + SRII + ")");
 				Result = "Зміни збережено...";
 			}
 			catch (Exception ex)
 			{
+				log.Add("User: " + User.Identity.Name + " TicketEdit Error: " + ex.ToString());
 				Result = "Помилка: " + ex.ToString();
 			}
-
 		}
 	}
 }
