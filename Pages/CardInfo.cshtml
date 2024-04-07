@@ -9,7 +9,7 @@
 	@if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Modifier))
 	{
 		<form method="post" style="margin-top: 3px;">
-			<div class="row">
+			<div class="row p-1">
 				<div class="col-4 yozhstyle1">
 
 
@@ -29,6 +29,14 @@
 						ID користувача
 						<br />
 						<input class="form-control" type="text" name="UserId" value="@Model.UserId" placeholder="NULL" />
+					</label>
+
+					<br />
+					<br />
+
+					<label>
+						<input type="checkbox" asp-for=IsActive />
+						Активна
 					</label>
 
 					<br />
