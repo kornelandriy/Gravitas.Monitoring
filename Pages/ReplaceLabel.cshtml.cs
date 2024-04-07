@@ -19,13 +19,15 @@ namespace Gravitas.Monitoring.Pages
 		[BindProperty]
 		public string ParsedData { get; set; } = "";
 		[BindProperty]
-		public List<string> ParsedLabels { get; set; } = new List<string>();
+		public List<string[]> ParsedLabels { get; set; } = new List<string[]>();
 		[BindProperty]
 		public string DeviceRawData { get; set; } = "";
+		[BindProperty]
+		public string AddLabel { get; set; } = "";
+		[BindProperty]
+		public string AddedLabel { get; set; } = "";
 
-
-
-
+		// ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 		public void OnGet()
 		{
@@ -50,17 +52,20 @@ namespace Gravitas.Monitoring.Pages
 		{
 			MakeAntennaList();
 			Result = CurAntenna;
-			//GetDeviceData(); // tst !!!
-			List<string> tmp = new List<string>();
+			AddedLabel = "";
+			if (!string.IsNullOrEmpty(AddLabel))
+			{
+				if (db.EnterpriseNum == 0) db.SendRequestToDB("insert into dbo.Cards (Id,TypeId,No,IsActive) values ('" + AddLabel + "', '3', '1', '1')");
+				if (db.EnterpriseNum == 1) db.SendRequestToDB("insert into dbo.Card (Id,TypeId,No,IsActive,IsOwn) values ('" + AddLabel + "', '3', '1', '1', '0')");
+				AddedLabel = AddLabel;
+				log.Add("User: " + User.Identity.Name + " ReplaceLabel: AddedLabel: " + AddedLabel);
+			}
+			AddLabel = "";
+			List<string[]> tmp = new List<string[]>();
 			DeviceRawData = GetDeviceData(CurAntenna);
 			ParsedData = ZebraDataParser(DeviceRawData, ref tmp);
 			ParsedLabels = tmp;
 		}
-
-		//private string GetDeviceData()
-		//{
-		//	return "\"{\\\"InData\\\":{\\\"TagList\\\":{\\\"E200001D1717016518108F3A\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\",\\\"E200001D9912015319507E00\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\"}},\\\"OutData\\\":null,\\\"LastUpdate\\\":\\\"2024-03-25T23:41:34.4819965+02:00\\\",\\\"ErrorCode\\\":0,\\\"Id\\\":0}\"";
-		//}
 
 		private string GetDeviceData(string id)
 		{
@@ -107,7 +112,7 @@ namespace Gravitas.Monitoring.Pages
 			AntennaList = tmp;
 		}
 
-		private string ZebraDataParser(string s, ref List<string> lst)
+		private string ZebraDataParser(string s, ref List<string[]> lst)
 		{
 			int n1 = -1;
 			try { n1 = s.IndexOf("TagList"); } catch { }
@@ -126,7 +131,7 @@ namespace Gravitas.Monitoring.Pages
 			return ZebrePartOfDataParser(s.Substring(n2, n3 - n2 + 1), ref lst) + "\r\n";
 		}
 
-		private string ZebrePartOfDataParser(string s, ref List<string> lst)
+		private string ZebrePartOfDataParser(string s, ref List<string[]> lst)
 		{
 			s = s.Replace("\\", "").Replace("\"", "").Replace("{", "").Replace("}", "");
 			string r = "";
@@ -136,31 +141,40 @@ namespace Gravitas.Monitoring.Pages
 			tmp = s.Split(',').ToList();
 			string rr = "";
 			string lblId = "";
+			bool IsOwn = false;
 			foreach (string ss in tmp)
 			{
 				n1 = 0;
 				n2 = ss.IndexOf(":");
 				r = ss.Substring(n1, n2 - n1);
 				lblId = r;
-				//lst.Add(r);
 				n1 = ss.IndexOf("T") - 10;
 				n2 = ss.IndexOf("T") + 8;
 
 
 				r = "[ " + ss.Substring(n1, n2 - n1 + 1) + " ]   -   " + r;
 				r = r.Replace("T", " ]   [ ");
-				rr += r + GetLabelParams(lblId) + "<br />\r\n";
+
+
+				rr += r + GetLabelParams(lblId, ref IsOwn) + "<br />\r\n";
+
+
+				lst.Add(new string[] { lblId, (IsOwn ? "1" : "0") });
 			}
 			return rr;
 		}
 
-		private string GetLabelParams(string LabelId)
+		private string GetLabelParams(string LabelId, ref bool IsOwn)
 		{
+			IsOwn = true;
 			List<string[]> tmp = new List<string[]>();
 			db.GetDataFromDBMSSQL("select IsActive, TicketContainerId from dbo.Cards where Id = '" + LabelId + "'", ref tmp);
 
-			if (tmp.Count == 0) return " Чужа";
-
+			if (tmp.Count == 0)
+			{
+				IsOwn = false;
+				return " Чужа";
+			}
 
 			return " Своя " + (tmp[0][0] == "True" ? "Активна" : "Вимкнута") + (tmp[0][1] == "" ? " Не зайнята" : " TicketContainer: " + tmp[0][1]);
 		}
