@@ -45,9 +45,11 @@ namespace Gravitas.Monitoring.Pages
 		{ // StatusId, RouteTtemplateId, RouteItemIndex, SecondaryRouteTemplateId, SecondaryRouteItemIndex, TicketContainerId
 			string tmpSRTI = "";
 			if (string.IsNullOrEmpty(SRTI)) tmpSRTI = "NULL"; else tmpSRTI = "'" + SRTI + "'";
+			string tmpRTI = "";
+			if (string.IsNullOrEmpty(RTI)) tmpRTI = "NULL"; else tmpRTI = "'" + RTI + "'";
 			string sql = "";
-			if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set StatusId='" + SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
-			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set  StatusId='" + SI + "', RouteTemplateId='" + RTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
+			if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set StatusId='" + SI + "', RouteTemplateId='" + tmpRTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
+			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set  StatusId='" + SI + "', RouteTemplateId='" + tmpRTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
 			try
 			{
 				db.SendRequestToDB(sql);

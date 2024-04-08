@@ -47,16 +47,6 @@ namespace Gravitas.Monitoring.Pages
 
 		public void OnPost()
 		{
-			//if (!string.IsNullOrEmpty(FindTC))
-			//{
-			//	log.Add("CarList: Redirect: CarInfo?tc=" + FindTC);
-			//	RedirectToPage("CarInfo?tc=" + FindTC);
-			//	return;
-			//}
-
-			log.Add("CarList: No Redirect...");
-
-
 			if (CarNum.IsNullOrEmpty()) CarNum = "";
 			List<string[]> lst = new List<string[]>();
 			//
@@ -87,7 +77,7 @@ namespace Gravitas.Monitoring.Pages
 			DateTime dt = fDate;
 			DateTime dt2 = dt;
 			DateTime dt1 = dt.AddDays(-1); // Доробить 1 або 2 доби...
-										   //
+
 			int d = dt1.Day;
 			int m = dt1.Month;
 			int y = dt1.Year;
@@ -134,6 +124,16 @@ namespace Gravitas.Monitoring.Pages
 					"left join [mhp].[dbo].[FixedAssets] on FixedAssets.Id = SingleWindowOpDatas.TransportId join [mhp].[dbo].[Nodes] on Nodes.Id = SingleWindowOpDatas.NodeId join [mhp].[dbo].[RouteTemplates] on " +
 					"RouteTemplates.Id = Tickets.RouteTemplateId where SingleWindowOpDatas.TicketContainerId = '" + FindTC + "' " +
 					"order by SingleWindowOpDatas.RegistrationDateTime";
+
+				if (db.EnterpriseNum == 1)
+					sql = "SELECT TOP (2000) (select No from Card where TypeId=2 and TicketContainerId=Ticket.ContainerId) as 'Card No', " +
+					"Node.Name, FixedAsset.RegistrationNo, opd.SingleWindowOpData.HiredTransportNumber, opd.SingleWindowOpData.ProductTitle, RouteTemplate.Name, " +
+					"opd.SingleWindowOpData.TicketId, opd.SingleWindowOpData.TicketContainerId, Ticket.StatusId, (select COUNT(id) from " +
+					"Ticket where Ticket.ContainerId = opd.SingleWindowOpData.TicketContainerId) as 'tc', opd.SingleWindowOpData.RegistrationDateTime, " +
+					"opd.SingleWindowOpData.CheckOutDateTime, dbo.Tickets.RouteItemIndex FROM [mhp].[dbo].[Ticket] join opd.SingleWindowOpData on opd.SingleWindowOpData.TicketContainerId = Ticket.TicketContainerId " +
+					"left join FixedAsset on FixedAsset.Id = opd.SingleWindowOpData.TransportId join Node on Node.Id = opd.SingleWindowOpData.NodeId join RouteTemplate on " +
+					"RouteTemplate.Id = Ticket.RouteTemplateId where opd.SingleWindowOpData.TicketContainerId = '" + FindTC + "' " +
+					"order by opd.SingleWindowOpData.RegistrationDateTime";
 			}
 			SQLString = sql;
 			db.GetDataFromDBMSSQL(sql, ref lst);
