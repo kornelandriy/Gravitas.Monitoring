@@ -18,11 +18,14 @@
 			<input type="checkbox" asp-for="f10" style="margin-left: 2px; margin-right: 2px;" /><label asp-for="f10" class="control-label">10 - Відхилено</label>
 		</div>
 		<div class="col-2">
-			<label asp-for="fDate" class="control-label">Дата</label><br /><input type="date" asp-for="fDate" class="w-100" /><br />
+			<label asp-for="fDate" class="control-label">Дата</label><br /><input type="date" asp-for="fDate" class="form-control w-100" />
 			<input type="checkbox" asp-for="fOneDay" /><label asp-for="fOneDay" class="control-label">Одна доба</label>
 		</div>
 		<div class="col-2">
-			<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" class="w-100" />
+			<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" class="form-control w-100" />
+		</div>
+		<div class="col-2">
+			<label asp-for="FindTC" class="control-label">TicketContainerId</label><input style="background-color: antiquewhite" type="text" asp-for="FindTC" class="form-control w-100" />
 		</div>
 		<div class="col-2">
 			<a href="./" class="btn btn-primary w-100 m-1">⏪ Назад до панелі</a>
@@ -44,7 +47,7 @@
 @foreach (string[] s in Model.lstData)
 {
 	<br />
-	<table class="yozhstyle1" style="box-shadow: 10px 5px 5px rgba(0,0,0,0.3); display: inline-block; margin-top: 5px;">
+	<table class="yozhstyle1" style="display: inline-block; margin-top: 5px;">
 		<tr>
 			<td class="brdr1sb headercolor">Картка (Тікетів)</td>
 			<td class="brdr1sb">@s[0] (@s[6])</td>

@@ -95,36 +95,33 @@
 </div>
 <br />
 <div class="row">
-	<br />
-	<br />
-	<h3>Тікети</h3>
-
-
-	<br /><br /><b>Тікети(ТТН)(@Model.TicketsList.Count)</b>
-	<table class="yozhstyle1" style="display:block;">
-		<tr>
-			<td class="brdr1sb headercolor">id</td>
-			<td class="brdr1sb headercolor">Статус</td>
-			<td class="brdr1sb headercolor">Маршрут</td>
-			<td class="brdr1sb headercolor">Етап</td>
-			<td class="brdr1sb headercolor">Доп. маршрут</td>
-			<td class="brdr1sb headercolor">Доп. етап</td>
-			<td class="brdr1sb headercolor">✏️</td>
-		</tr>
-		@foreach (string[] s in Model.TicketsList)
-		{
-			<tr>
-				<td class="brdr1sb">@s[5]</td>
-				<td class="brdr1sb">@s[0]</td>
-				<td class="brdr1sb">@s[1]</td>
-				<td class="brdr1sb">@s[2]</td>
-				<td class="brdr1sb">@s[3]</td>
-				<td class="brdr1sb">@s[4]</td>
-				<td class="brdr1sb"><a href="./TicketEdit?t=@s[5]" class="btn btn-primary">✏️</a></td>
+	<div class="col-12">
+		<h3>Тікети (@Model.TicketsList.Count)</h3>
+		<table class="yozhstyle1" style="display:inline-block;">
+			<tr style="text-align: center;">
+				<td class="brdr1sb headercolor">id</td>
+				<td class="brdr1sb headercolor">Статус</td>
+				<td class="brdr1sb headercolor">Маршрут</td>
+				<td class="brdr1sb headercolor">Етап</td>
+				<td class="brdr1sb headercolor">Доп. маршрут</td>
+				<td class="brdr1sb headercolor">Доп. етап</td>
+				<td class="brdr1sb headercolor">✏️</td>
 			</tr>
-		}
-	</table>
+			@foreach (string[] s in Model.TicketsList)
+			{
+				<tr>
+					<td class="brdr1sb">@s[5]</td>
+					<td class="brdr1sb">@s[0]</td>
+					<td class="brdr1sb">@s[1]</td>
+					<td class="brdr1sb">@s[2]</td>
+					<td class="brdr1sb">@s[3]</td>
+					<td class="brdr1sb">@s[4]</td>
+					<td class="brdr1sb"><a href="./TicketEdit?t=@s[5]" class="btn btn-primary">✏️</a></td>
+				</tr>
+			}
+		</table>
 
+	</div>
 
 </div>
 <br />
