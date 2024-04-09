@@ -37,6 +37,7 @@
 		<div class="yozhstyle1" style="width: 100%; min-height: 200px; border: 1px solid black; background-color: #ffffee;">
 			@foreach (string[] nDevice in Model.CurDevices)
 			{
+				@nDevice[0]
 				<a href="./Device?DeviceId=@nDevice[0]" class="btn btn-primary" style="margin: 2px; min-width: 70%;" title="@nDevice[0]">🛠️ @nDevice[1] </a>
 				<br />
 			}

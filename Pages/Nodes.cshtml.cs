@@ -20,6 +20,28 @@ namespace Gravitas.Monitoring.Pages
 		public List<string> SelectedNode { get; set; } = new List<string>();
 		[BindProperty]
 		public string wndCLR { get; set; } = "";
+
+		public string[] StatusNamesForNode = new string[]
+		{
+			"",
+			"Бланк", // 1
+            "В обробці", // 2
+            "На погодженні", // 3
+            "Погоджено", // 4
+            "Відмовлено у погодженні",//5
+            "Очікування", // 6
+            "", "", "",
+			"Виконано", // 10
+            "Відмовлено", // 11
+            "Скасовано", // 12
+            "Часткове завантаження", // 13
+            "Часткове розвантаження", // 14
+            "Перезавантаження" // 15
+		};
+
+
+
+
 		//
 		private void GetData()
 		{
@@ -76,15 +98,24 @@ namespace Gravitas.Monitoring.Pages
 			List<string[]> tmp3 = new List<string[]>();
 			ParseNodeContext(ref tmp3, CurContext);
 
-			List<string[]> tmtList = new List<string[]>();
-			if (!string.IsNullOrEmpty(tmp3[3][1]))
+			//List<string[]> tmtList = new List<string[]>();
+
+			//tmp3.Add(new string[] { "Тип вузла", SelectedNode[2] });
+
+			List<string[]> sNodeStateResult = new List<string[]>();
+			if (db.EnterpriseNum == 0)
 			{
-				//db.GetDataFromDBMSSQL("select StateId from dbo. ", ref tmp);
+				if (!string.IsNullOrEmpty(tmp3[3][1]) && tmp3[3][1] != "null")
+				{
+					string sTable = GetTableNameByNodeType(SelectedNode[2]);
+					if (sTable != "ND")
+					{
+						sNodeStateResult.Clear();
+						db.GetDataFromDBMSSQL("select StateId from dbo." + sTable + " where Id = '" + tmp3[3][1] + "'", ref sNodeStateResult);
+						tmp3.Add(new string[] { "Стан", GetStatenameById(sNodeStateResult[0][0]) });
+					}
+				}
 			}
-
-
-			tmp3.Add(new string[] { "Тип вузла", SelectedNode[2] });
-
 
 			NodeContext = tmp3;
 		}
@@ -158,6 +189,52 @@ namespace Gravitas.Monitoring.Pages
 			{
 				lst.Add(s.Split(":"));
 			}
+		}
+
+		private string GetTableNameByNodeType(string NodeType)
+		{
+			string[][] nt = {
+				new string[] { "1", "SingleWindowOpDatas" },
+				new string[] { "3", "SecurityCheckInOpDatas" },
+				new string[] { "4", "SecurityCheckOutOpDatas" },
+				new string[] { "5", "LabFacelessOpDatas" },
+				new string[] { "6", "LabFacelessOpDatas" },
+				new string[] { "7", "ScaleOpDatas" },
+				new string[] { "8", "UnloadGuideOpDatas" },
+				new string[] { "9", "UnloadPointOpDatas" },
+				new string[] { "11", "LoadGuideOpDatas" },
+				new string[] { "14", "CentralLabOpDatas" },
+				new string[] { "15", "LoadPointOpDatas" },
+				new string[] { "17", "LoadPointOpDatas" },
+				new string[] { "20", "CheckPointOpDatas" },
+				new string[] { "44", "PayOfficeOpDatas" },
+				new string[] { "55", "DriverCheckInOpDatas" },
+				new string[] { "77", "LoadPointOpDatas" },
+				new string[] { "92", "UnloadPointOpDatas" }
+			};
+			string Result = "ND";
+			foreach (string[] s in nt)
+			{
+				if (s[0] == NodeType)
+				{
+					Result = s[1];
+					break;
+				}
+			}
+			return Result;
+		}
+
+		private string GetStatenameById(string id)
+		{
+			int n = -1;
+
+			try { n = int.Parse(id); } catch { }
+			if (n > -1)
+				return id + " - " + StatusNamesForNode[n];
+			else
+				return "Невідомий стан";
+
+
 		}
 
 		private string GetIPFromTag(string tag, string before = "", string after = "")
