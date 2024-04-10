@@ -1,0 +1,100 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.VKModuleDataModel
+@{
+}
+<br />
+<div class="row">
+	<div class="col-3">
+		<center>
+			<h3>
+				VK-Module Socket 1
+			</h3>
+		</center>
+		<div class="yozhstyle1 brdr1sb" style=" height: 600px; overflow: auto;">
+			@foreach (string[] s in Model.Devices1)
+			{
+				<form method="post" class="m-1">
+					<input type="hidden" asp-for="SelectedDevice" value="@s[0]" />
+					<input type="hidden" asp-for="SelectedDeviceIP" value="@s[2]" />
+					@if (s[0] == Model.SelectedDevice)
+					{
+						<button type="submit" class="btn btn-primary w-100" title="@s[2]">@s[1]</button>
+					}
+					else
+					{
+						<button type="submit" class="btn btn-outline-primary w-100" title="@s[2]">@s[1]</button>
+					}
+				</form>
+			}
+		</div>
+	</div>
+	<div class="col-3">
+		<center>
+			<h3>
+				VK-Module Socket 2
+			</h3>
+		</center>
+		<div class="yozhstyle1 brdr1sb" style=" height: 600px; overflow: auto;">
+			@foreach (string[] s in Model.Devices2)
+			{
+				<form method="post" class="m-1">
+					<input type="hidden" asp-for="SelectedDevice" value="@s[0]" />
+					<input type="hidden" asp-for="SelectedDeviceIP" value="@s[2]" />
+					@if (s[0] == Model.SelectedDevice)
+					{
+						<button type="submit" class="btn btn-primary w-100" title="@s[2]">@s[1]</button>
+					}
+					else
+					{
+						<button type="submit" class="btn btn-outline-primary w-100" title="@s[2]">@s[1]</button>
+					}
+				</form>
+			}
+		</div>
+	</div>
+	<div class="col-3">
+		<center>
+			<h3>
+				VK-Module Socket 4
+			</h3>
+		</center>
+		<div class="yozhstyle1 brdr1sb" style=" height: 600px; overflow: auto;">
+			@foreach (string[] s in Model.Devices3)
+			{
+				<form method="post" class="m-1">
+					<input type="hidden" asp-for="SelectedDevice" value="@s[0]" />
+					<input type="hidden" asp-for="SelectedDeviceIP" value="@s[2]" />
+					@if (s[0] == Model.SelectedDevice)
+					{
+						<button type="submit" class="btn btn-primary w-100" title="@s[2]">@s[1]</button>
+					}
+					else
+					{
+						<button type="submit" class="btn btn-outline-primary w-100" title="@s[2]">@s[1]</button>
+					}
+				</form>
+			}
+		</div>
+	</div>
+	<div class="col-3">
+		<center>
+			<h3>
+				Результат
+			</h3>
+		</center>
+		<div class="yozhstyle1 brdr1sb" style=" height: 600px; overflow: auto;">
+			<center>
+				<h4>Id: @Model.SelectedDevice</h4>
+			</center>
+			<br />
+			<center>
+				<table class="yozhstyle1" style="display:inline-block;">
+					@Html.Raw(Model.DeviceData)
+				</table>
+
+			</center>
+			<br />
+			<a href="./Nodes" class="btn btn-primary w-100">⏪ Назад до вузлів</a>
+		</div>
+	</div>
+</div>

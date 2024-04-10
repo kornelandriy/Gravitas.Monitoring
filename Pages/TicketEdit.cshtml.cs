@@ -48,13 +48,13 @@ namespace Gravitas.Monitoring.Pages
 			string tmpRTI = "";
 			if (string.IsNullOrEmpty(RTI)) tmpRTI = "NULL"; else tmpRTI = "'" + RTI + "'";
 			string sql = "";
-			if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set StatusId='" + SI + "', RouteTemplateId='" + tmpRTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
-			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set  StatusId='" + SI + "', RouteTemplateId='" + tmpRTI + "', RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
+			if (db.EnterpriseNum == 0) sql = "update dbo.Tickets set StatusId='" + SI + "', RouteTemplateId=" + tmpRTI + ", RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
+			if (db.EnterpriseNum == 1) sql = "update dbo.Ticket set  StatusId='" + SI + "', RouteTemplateId=" + tmpRTI + ", RouteItemIndex='" + RII + "', SecondaryRouteTemplateId=" + tmpSRTI + ", SecondaryRouteItemIndex='" + SRII + "' where Id = '" + t + "'";
 			try
 			{
 				db.SendRequestToDB(sql);
 				log.Add("User: " + User.Identity.Name + " TicketEdit new data (Id: " + t + " StatusId: " + SI + " RouteTemplateId: " + RTI + " RouteItemIndex: " + RII + " SecondaryRouteTemplateId: " + tmpSRTI + " SecondaryRouteItemIndex: " + SRII + ")");
-				Result = "«м≥ни збережено...";
+				Result = "«м≥ни збережено... tmpRTI: " + tmpRTI;
 			}
 			catch (Exception ex)
 			{

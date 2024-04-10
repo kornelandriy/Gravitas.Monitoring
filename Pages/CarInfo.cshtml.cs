@@ -363,16 +363,17 @@ namespace Gravitas.Monitoring.Pages
 				//---------------------------------------------- LoadPointOpDatas
 				Etap = "LoadPointOpDatas";
 				tmp.Clear();
-				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select Id, StateId, NodeId, CheckInDateTime, CheckOutDateTime from dbo.LoadPointOpDatas where TicketId = '" + t + "'", ref tmp);
+				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select Id, StateId, NodeId, CheckInDateTime, CheckOutDateTime, LoadSiloNames from dbo.LoadPointOpDatas where TicketId = '" + t + "'", ref tmp);
 				if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select Id, StateId, NodeId, CheckInDateTime, CheckOutDateTime from opd.LoadPointOpData where TicketId = '" + t + "'", ref tmp);
 				if (tmp.Count > 0)
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.LoadPointOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.LoadPointOpData";
-					CarProgress.Add(new string[] { TableName, "Точка завантаження" });
+					CarProgress.Add(new string[] { TableName, "Точка завантаження", "", "", "", "Силоси" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						if (db.EnterpriseNum == 0) CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], s[5] });
+						if (db.EnterpriseNum == 1) CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 				//---------------------------------------------- CentralLabOpDatas
