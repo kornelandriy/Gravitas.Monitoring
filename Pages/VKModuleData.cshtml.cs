@@ -23,6 +23,7 @@ namespace Gravitas.Monitoring.Pages
 		public string DeviceData { get; set; } = "";
 		[BindProperty]
 		public string ReturnedIP { get; set; } = "";
+		public List<string[]> DeviceDataList { get; set; } = new List<string[]>();
 
 		// ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
@@ -34,7 +35,36 @@ namespace Gravitas.Monitoring.Pages
 		public void OnPost()
 		{
 			MakeDeviceList();
-			DeviceData = ParseDeviceData(GetVKModuleData(SelectedDeviceIP));
+			DeviceDataList = ParseDeviceData2(GetVKModuleData(SelectedDeviceIP));
+		}
+
+		private List<string[]> ParseDeviceData2(string data)
+		{
+			List<string> tmp1 = new List<string>();
+			List<string[]> tmp2 = new List<string[]>();
+			data = data.Replace("\r", "#");
+			data = data.Replace("\n", "@");
+			//
+			data = data.Replace("@", "");
+			//
+			for (int i = 0; i < 8; i++)
+			{
+				data = data.Replace("</btn" + i + ">", "");
+				data = data.Replace("</led" + i + ">", "");
+				//
+				data = data.Replace("<btn" + i + ">", "Enter " + i + "$");
+				data = data.Replace("<led" + i + ">", "Relay " + i + "$");
+				//
+				data = data.Replace("</response>", "");
+				data = data.Replace("<response>", "");
+			}
+			data = data.Substring(1, data.Length - 3);
+			tmp1 = data.Split('#').ToList();
+			foreach(string s in tmp1)
+			{
+				tmp2.Add(s.Split('$'));
+			}
+			return tmp2;
 		}
 
 		private string ParseDeviceData(string data)

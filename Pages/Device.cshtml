@@ -3,7 +3,6 @@
 @{
 	ViewData["Title"] = Model.CurDeviceId;
 }
-
 <center><h1> Обладнання: </h1></center>
 <br />
 @if (Model.CurDevice.Count > 0)
@@ -12,49 +11,47 @@
 	<div class="row">
 		<div class="col-2">
 			<a asp-area="" asp-page="/Nodes" class="btn btn-primary" style="margin: 2px; width: 100%">⏪ Назад до вузлів</a>
-
 			<form method="post">
 				<input type="hidden" asp-for="CmdSelector" value="0" />
 				<button type="submit" class="btn btn-primary" style="margin: 2px; width: 100%;">🔃 Отримати дані</button>
 			</form>
-
 			<a href="@Model.CurDeviceURL" class="btn btn-primary" style="margin: 2px; width: 100%;" target="_blank">WEB інтерфейс ⏩</a>
-
 			<form method="post">
 				<input type="hidden" asp-for="CmdSelector" value="1" />
 				<button type="submit" class="btn btn-primary" style="margin: 2px; width: 100%;">🔃 PING</button>
 			</form>
 		</div>
 		<div class="col-10">
-			<table class="yozhstyle1">
+			<table class="yozhstyle1" style="display: inline-block;">
 				<tr>
-					<td class="brdr1sb">id</td>
+					<td class="brdr1sb headercolor">id</td>
 					<td class="brdr1sb">@Model.CurDevice[0][0]</td>
 				</tr>
 				<tr>
-					<td class="brdr1sb">Назва</td>
+					<td class="brdr1sb headercolor">Назва</td>
 					<td class="brdr1sb">@Model.CurDevice[0][4]</td>
 				</tr>
 				<tr>
-					<td class="brdr1sb">Тип</td>
+					<td class="brdr1sb headercolor">Тип</td>
 					<td class="brdr1sb">@Model.CurDevice[0][3]</td>
 				</tr>
 				<tr>
-					<td class="brdr1sb">ParentId</td>
+					<td class="brdr1sb headercolor">ParentId</td>
 					<td class="brdr1sb">@Model.CurDevice[0][1]</td>
 				</tr>
 				<tr>
-					<td class="brdr1sb">Стан</td>
+					<td class="brdr1sb headercolor">Стан</td>
 					<td class="brdr1sb">@Model.CurDevice[0][2]</td>
 				</tr>
 				<tr>
-					<td class="brdr1sb">IP адреса</td>
+					<td class="brdr1sb headercolor">IP адреса</td>
 					<td class="brdr1sb">@Model.DeviceIP</td>
 				</tr>
 			</table>
 			<br />
 		</div>
 	</div>
+	<br />
 	<div class="row">
 		<div class="col-12">
 			<div class="yozhstyle1" style="width: 100%; min-height: 200px; display: inline-block;">
@@ -63,7 +60,6 @@
 			</div>
 		</div>
 	</div>
-
 }
 else
 {

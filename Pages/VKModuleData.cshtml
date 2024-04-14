@@ -88,8 +88,27 @@
 			</center>
 			<br />
 			<center>
-				<table class="yozhstyle1" style="display:inline-block;">
-					@Html.Raw(Model.DeviceData)
+				<table class="yozhstyle1" style="display: inline-block;">
+					@foreach (string[] ss in Model.DeviceDataList)
+					{
+						<tr>
+							<td class="brdr1sb">
+								@ss[0]
+							</td>
+							@if (ss[1] == "1" || ss[1]=="dn")
+							{
+								<td class="brdr1sb" style="background-color: lime">
+									@ss[1]
+								</td>
+							}
+							else
+							{
+								<td class="brdr1sb">
+									@ss[1]
+								</td>
+							}
+						</tr>
+					}
 				</table>
 			</center>
 		</div>
