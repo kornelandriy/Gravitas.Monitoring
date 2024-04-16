@@ -409,6 +409,23 @@ namespace Gravitas.Monitoring.Pages
 						}
 					}
 				}
+				if (db.EnterpriseNum == 0) // MZVKK
+				{
+					//---------------------------------------------- Pay Office
+					Etap = "Pay Office";
+					tmp.Clear();
+					db.GetDataFromDBMSSQL("select Id, StateId, NodeId, CheckInDateTime, CheckOutDateTime from dbo.PayOfficeOpDatas where TicketId = '" + t + "'", ref tmp);
+
+					if (tmp.Count > 0)
+					{
+						TableName = "dbo.PayOfficeOpDatas";
+						CarProgress.Add(new string[] { TableName, "Каса" });
+						foreach (string[] s in tmp)
+						{
+							CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						}
+					}
+				}
 				//---------------------------------------------- KPP Out
 				Etap = "KPP Out";
 				tmp.Clear();
