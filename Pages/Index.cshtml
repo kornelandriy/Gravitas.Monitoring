@@ -5,26 +5,26 @@
 @{
 	ViewData["Title"] = "Home page";
 	string Groups = "";
+	bool a = false;
+	bool m = false;
+	bool u = false;
 }
 
 <div class="text-center">
-	<h1 class="display-4">Адмін панель</h1>
+	<h1 class="display-2" style="color: white; text-shadow: 5px 5px 10px #777, 0px 0px 1px #777; font-weight: 500;"><b>Адмін панель</b></h1>
 	@if (SignInManager.IsSignedIn(User))
 	{
 		@if (User.IsInRole(UserRoles.Admin))
 		{
+			a = true;
 			Groups += "Адміністратори<br />";
 			@*<div><a asp-area="" asp-page="/Monitoring/ViewAuthorized">Тільки для адміна</a></div>*@
 		}
 
 		@if (User.IsInRole(UserRoles.Modifier))
 		{
+			m = true;
 			Groups += "Редактори<br />";
-		}
-
-		@if (User.IsInRole(UserRoles.User))
-		{
-			Groups += "Користувачі<br />";
 			<br />
 			<br />
 			<div class="row yozhstyle1">
@@ -40,6 +40,12 @@
 			</div>
 		}
 
+		@if (User.IsInRole(UserRoles.User))
+		{
+			u = true;
+			Groups += "Користувачі<br />";
+		}
+
 		@*
 	@if (User.IsInRole(UserRoles.Admin))
 	{
@@ -50,21 +56,43 @@
 	</div>
 	}
 	*@
-	}
-</div>
-<div style="margin-top: 100px;">
-	@if (Groups != "")
-	{
-		<div>
-			Ви є учасником груп:<br /><br />
-			@Html.Raw(Groups)
+
+
+		<div style="margin-top: 100px;">
+			<table class="yozhstyle1" style="display:inline-block;">
+				<tr>
+					<td class="brdr1sb headercolor">
+						Групи до яких<br />входить користувач
+					</td>
+				</tr>
+				<tr>
+					@if (a)
+					{
+						<td class="brdr1sb">
+							Адміністратори
+						</td>
+					}
+				</tr>
+				<tr>
+					@if (m)
+					{
+						<td class="brdr1sb">
+							Редактори
+						</td>
+					}
+				</tr>
+				<tr>
+					@if (u)
+					{
+						<td class="brdr1sb">
+							Користувачі
+						</td>
+					}
+				</tr>
+			</table>
 		</div>
 	}
 	else
 	{
-		<div>
-			<br /><br />
-			Вам ще не назначено групу...
-		</div>
+		<div class="yozhstyle1 brdr1sb" style="margin-top: 100px; background-color: lightcoral"><h1>Для роботи з системою увійдіть в обліковий запис</h1></div>
 	}
-</div>
