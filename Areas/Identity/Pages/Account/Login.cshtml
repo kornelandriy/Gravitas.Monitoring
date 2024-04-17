@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Вхід в систему";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -26,7 +26,8 @@
                 <div class="checkbox mb-3">
                     <label asp-for="Input.RememberMe" class="form-label">
                         <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        Запамятати мене
+                        @*Html.DisplayNameFor(m => m.Input.RememberMe)*@
                     </label>
                 </div>
                 <div>
@@ -40,7 +41,7 @@
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Зареєструвати нового користувача</a>
                     </p>
                     <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Повторно надіслати підтвердження</a>
                     </p>
                 </div>
             </form>

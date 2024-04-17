@@ -14,7 +14,13 @@
 		<form method="post">
 			<input type="hidden" asp-for=TC />
 			<div class="row">
-				<div class="col-3"></div>
+				<div class="col-3">
+
+					В полях <b>RouteTemplateId</b> та <b>SecondaryRouteTemplateId</b> вказується Id маршрута
+					<br />
+					<br />
+					В полях <b>RouteItemIndex</b> та <b>SecondaryRouteItemIndex</b> вказується номер останньої пройденої точки на маршруті
+				</div>
 				<div class="col-3">
 					<label style="width: 100%;">StatusId<br /><input type="number" asp-for="SI" class="form-control" /></label>
 					<label style="width: 100%;">RouteTemplateId<br /><input type="number" asp-for="RTI" class="form-control" /></label>
@@ -24,7 +30,18 @@
 					<label style="width: 100%;">SecondaryRouteTemplateId<br /><input type="number" asp-for="SRTI" class="form-control" /></label>
 					<label style="width: 100%;">SecondaryRouteItemIndex<br /><input type="number" asp-for="SRII" class="form-control" /></label>
 				</div>
-				<div class="col-3"></div>
+				<div class="col-3">
+
+					<h4>StatusId:</h4>
+					1. Бланк(новий)<br />
+					2. В обробці<br />
+					3. Доопрацювання<br />
+					4. В роботі<br />
+					5. Завершено<br />
+					6. Проведено<br />
+					10. Відхилено
+
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-12">

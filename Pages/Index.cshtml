@@ -9,9 +9,9 @@
 	bool m = false;
 	bool u = false;
 }
-
+<a href="./ApUsers">Users</a><br />
 <div class="text-center">
-	<h1 class="display-2" style="color: white; text-shadow: 5px 5px 10px #777, 0px 0px 1px #777; font-weight: 500;"><b>Адмін панель</b></h1>
+	<h1 class="display-2" style="color: white; text-shadow: 5px 5px 10px #777, 0px 0px 1px #777; font-weight: 500;"><b>ПАНЕЛЬ АДМІНІСТРАТОРА</b></h1>
 	@if (SignInManager.IsSignedIn(User))
 	{
 		@if (User.IsInRole(UserRoles.Admin))
@@ -38,6 +38,58 @@
 					<a href="./Nodes" class="btn btn-primary w-100" style="font-size: 16pt;">🚏 Вузли</a>
 				</div>
 			</div>
+			// ###### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+			<br />
+			<br />
+			<div class="row yozhstyle1">
+				<div class="col-4">
+					<p style="font-size:100pt;">🚚</p>
+					<a href="./CarList" class="btn btn-primary w-100" style="font-size: 16pt;">Авто</a>
+				</div>
+				<div class="col-4">
+					<p style="font-size:100pt;">🎫</p>
+					<a href="./CardList" class="btn btn-primary w-100" style="font-size: 16pt;">Картки</a>
+				</div>
+				<div class="col-4">
+					<p style="font-size:100pt;">🚏</p>
+					<a href="./Nodes" class="btn btn-primary w-100" style="font-size: 16pt;">Вузли</a>
+				</div>
+			</div>
+			// ###### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+			<br />
+			<br />
+			<div class="row">
+				<div class="card p-1" style="max-width: 200px;">
+					<div class="card-header">
+						<a href="./CarList" class="btn btn-primary w-100" style="font-size: 16pt;">Авто</a>
+					</div>
+					<div class="card-body w-100 h-100">
+						<a href="./CarList" class="" style="text-decoration:auto; font-size:70pt;">
+							🚚
+						</a>
+					</div>
+				</div>
+				<div class="card p-1" style="max-width: 200px;">
+					<div class="card-header">
+						<a href="./CardList" class="btn btn-primary w-100" style="font-size: 16pt;">Картки</a>
+					</div>
+					<div class="card-body w-100 h-100">
+						<a href="./CardList" class="" style="text-decoration:auto; font-size:70pt;">
+							🎫
+						</a>
+					</div>
+				</div>
+				<div class="card p-1" style="max-width: 200px;">
+					<div class="card-header">
+						<a href="./Nodes" class="btn btn-primary w-100" style="font-size: 16pt;">Вузли</a>
+					</div>
+					<div class="card-body w-100 h-100">
+						<a href="./Nodes" class="" style="text-decoration:auto; font-size:70pt;">
+							🚏
+						</a>
+					</div>
+				</div>
+			</div>
 		}
 
 		@if (User.IsInRole(UserRoles.User))
@@ -45,54 +97,46 @@
 			u = true;
 			Groups += "Користувачі<br />";
 		}
-
-		@*
-	@if (User.IsInRole(UserRoles.Admin))
-	{
-	<div class="row yozhstyle1" style="margin-top: 40px;">
-	<div class="col-4">
-	<a href="#" class="btn btn-primary w-100" style="font-size: 16pt;">👥 Ролі</a>
-	</div>
-	</div>
-	}
-	*@
-
-
-		<div style="margin-top: 100px;">
-			<table class="yozhstyle1" style="display:inline-block;">
-				<tr>
-					<td class="brdr1sb headercolor">
-						Групи до яких<br />входить користувач
-					</td>
-				</tr>
-				<tr>
-					@if (a)
-					{
-						<td class="brdr1sb">
-							Адміністратори
-						</td>
-					}
-				</tr>
-				<tr>
-					@if (m)
-					{
-						<td class="brdr1sb">
-							Редактори
-						</td>
-					}
-				</tr>
-				<tr>
-					@if (u)
-					{
-						<td class="brdr1sb">
-							Користувачі
-						</td>
-					}
-				</tr>
-			</table>
-		</div>
 	}
 	else
 	{
 		<div class="yozhstyle1 brdr1sb" style="margin-top: 100px; background-color: lightcoral"><h1>Для роботи з системою увійдіть в обліковий запис</h1></div>
 	}
+</div>
+<br />
+@if (SignInManager.IsSignedIn(User))
+{
+	<div style="margin-top: 100px;">
+		<table class="yozhstyle1" style="display:inline-block;">
+			<tr>
+				<td class="brdr1sb headercolor">
+					Групи до яких<br />входить користувач
+				</td>
+			</tr>
+			<tr>
+				@if (a)
+				{
+					<td class="brdr1sb">
+						Адміністратори
+					</td>
+				}
+			</tr>
+			<tr>
+				@if (m)
+				{
+					<td class="brdr1sb">
+						Редактори
+					</td>
+				}
+			</tr>
+			<tr>
+				@if (u)
+				{
+					<td class="brdr1sb">
+						Користувачі
+					</td>
+				}
+			</tr>
+		</table>
+	</div>
+}

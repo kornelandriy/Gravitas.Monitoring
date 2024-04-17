@@ -1,0 +1,43 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.OneCTestModel
+@{
+}
+<div class="row">
+	<div class="col-3 p-1">
+		<a href="CarInfo?tc=@Model.tc" class="btn btn-primary w-100">⏪ Назад до авто</a>
+	</div>
+</div>
+<div class="row">
+	<div class="col-12 p-1">
+		<table class="yozhstyle1" style="display:inline-block;">
+			<tr>
+				<td class="brdr1sb headercolor">
+					1С параметр
+				</td>
+				<td class="brdr1sb headercolor">
+					Значення
+				</td>
+			</tr>
+			@foreach (string[] s in Model.OneCData)
+			{
+				<tr>
+					<td class=" brdr1sb">
+						@s[0]
+					</td>
+					@if (s[0] == "Error")
+					{
+						<td class="brdr1sb">
+							Час вийшов (10 секунд) або <br />@s[1]
+						</td>
+					}
+					else
+					{
+						<td class="brdr1sb">
+							@s[1]
+						</td>
+					}
+				</tr>
+			}
+		</table>
+	</div>
+</div>

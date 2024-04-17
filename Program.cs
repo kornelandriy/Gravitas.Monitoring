@@ -32,8 +32,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-
-
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -47,8 +45,6 @@ using (var scope = app.Services.CreateScope())
 
     var context2 = services.GetRequiredService<MzvkkDbContext>();
     context2.Database.Migrate();
-
-
 
     await SeedData.Initialize(services);
 }

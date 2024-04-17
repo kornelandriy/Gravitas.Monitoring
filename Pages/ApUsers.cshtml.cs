@@ -7,12 +7,12 @@ namespace Gravitas.Monitoring.Pages
 {
     public class ApUsersModel : PageModel
     {
-		private readonly Gravitas.Monitoring.Data.ApplicationDbContext _context;
-		public ApUsersModel(Gravitas.Monitoring.Data.ApplicationDbContext context) { _context = context; }
-		public IList<AspNetUsers> AspNetUsers { get; set; } = default!;
+		//private readonly Gravitas.Monitoring.Data.ApplicationDbContext _context;
+		//public ApUsersModel(Gravitas.Monitoring.Data.ApplicationDbContext context) { _context = context; }
+		//public IList<AspNetUsers> AspNetUsers { get; set; } = default!;
 
-		[BindProperty]
-		public string UserName { get; set; }
+		//[BindProperty]
+		//public string UserName { get; set; }
 
 
 
