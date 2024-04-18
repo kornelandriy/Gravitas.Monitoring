@@ -1,0 +1,36 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.ChangeLoadSiloNumModel
+@using Gravitas.Monitoring.Constants
+@inject SignInManager<IdentityUser> SignInManager
+@{
+}
+@if (SignInManager.IsSignedIn(User))
+{
+	@if (User.IsInRole(UserRoles.Admin) || User.IsInRole(UserRoles.Modifier))
+	{
+		<center>
+			<h3>Вкажіть через кому силоси...</h3>
+		</center>
+		<form method="post">
+			<div class="row align-content-center">
+				<div class="col-2">
+				</div>
+				<div class="col-2">
+					<a href="./CarInfo?tc=@Model.tc" class="btn btn-primary w-100">⏪ Назад до авто</a>
+				</div>
+				<div class="col-4">
+					<input type="text" asp-for="Siloes" class="form-control">
+				</div>
+				<div class="col-2">
+					<button type="submit" class="btn btn-primary w-100">💾 Зберегти</button>
+				</div>
+				<div class="col-2">
+				</div>
+			</div>
+		</form>
+		<br />
+		<center>
+			@Model.Result
+		</center>
+	}
+}
