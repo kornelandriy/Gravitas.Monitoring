@@ -4,6 +4,7 @@
 @{
 	ViewData["Title"] = "Автівки";
 }
+<h3 class="text-center">Налаштування фільтру реєстру автотранспорту які зареєстровані в системі</h3>
 <form method="post">
 	<div class="row yozhstyle1" style="margin-top: 3px;">
 		<div class="col-2">
@@ -35,6 +36,7 @@
 		</div>
 	</div>
 </form>
+<br />
 <div>
 	@if (Model.lstData.Count > 0)
 	{
@@ -47,7 +49,6 @@
 </div>
 @foreach (string[] s in Model.lstData)
 {
-	<br />
 	<br />
 	<table class="yozhstyle1" style="display: inline-block; margin-top: 5px;">
 		<tr>

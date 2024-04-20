@@ -30,6 +30,13 @@ namespace Gravitas.Monitoring.Pages
 		[BindProperty]
 		public List<string[]> TicketsList { get; set; } = new List<string[]>();
 
+		[BindProperty]
+		public string CurFeed { get; set; } = "";
+		[BindProperty]
+		public string CurCarNo { get; set; } = "";
+		[BindProperty]
+		public string CurTrailerNo { get; set; } = "";
+
 		//##################################################################################################################################
 
 		public string sNodes = "";
@@ -53,6 +60,7 @@ namespace Gravitas.Monitoring.Pages
 		{
 			tc = HttpContext.Request.Query["tc"].ToString();
 			CurTC = tc;
+			GetCrInfo();
 			try
 			{
 				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select * from dbo.Cards where TicketContainerId = " + tc, ref cards);
@@ -101,6 +109,36 @@ namespace Gravitas.Monitoring.Pages
 
 			//####################################################################################
 		}
+
+		private void GetCrInfo()
+		{
+			List<string[]> tmp = new List<string[]>();
+			string sql = "";
+			if (db.EnterpriseNum == 0)
+			{
+				sql = "SELECT SingleWindowOpDatas.ProductTitle, (select RegistrationNo from FixedAssets where Id = SingleWindowOpDatas.TransportId) as 'CNo', SingleWindowOpDatas.HiredTransportNumber, (select RegistrationNo from FixedAssets where Id = SingleWindowOpDatas.TrailerId) as 'TNo', SingleWindowOpDatas.HiredTrailerNumber FROM [mhp].[dbo].[SingleWindowOpDatas] where SingleWindowOpDatas.TicketContainerId='" + CurTC + "'";
+				db.GetDataFromDBMSSQL(sql, ref tmp);
+				if (tmp.Count > 0)
+				{
+					if (tmp[0][1] != "") CurCarNo = tmp[0][1]; else CurCarNo = tmp[0][2];
+					if (tmp[0][3] != "") CurTrailerNo = tmp[0][3]; else CurTrailerNo = tmp[0][4];
+					CurFeed = tmp[0][0];
+				}
+				else
+				{
+					CurCarNo = "ND";
+					CurTrailerNo = "ND";
+					CurFeed = "ND";
+				}
+			}
+			else
+			{
+				CurCarNo = "ND";
+				CurTrailerNo = "ND";
+				CurFeed = "ND";
+			}
+		}
+
 		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		public void ShowRoute(string RouteTemplateId, string LastRouteItem, string LastNode, string t, string tc)
 		{
@@ -181,23 +219,120 @@ namespace Gravitas.Monitoring.Pages
 
 				if (s1 == LastRouteItem && s2 == LastRouteNode)
 				{
-					lst.Add(new string[] { s1, "👉[" + s2 + "] " + GetNodeName(s2) });
+					lst.Add(new string[] { s1, "👉[" + s2 + "] " + GetNodeName(s2) + " " + LongRangeRFID(s2) });
 				}
 				else
 				{
-					lst.Add(new string[] { s1, "[" + s2 + "] " + GetNodeName(s2) });
+					lst.Add(new string[] { s1, "[" + s2 + "] " + GetNodeName(s2) + " " + LongRangeRFID(s2) });
 				}
 
 			}
 		}
 
-
-		private string GetNodeName(string NodeId)
+		private string LongRangeRFID(string NodeId)
 		{
+			string rslt = "";
+			List<string[]> tmp = new List<string[]>();
+			if (db.EnterpriseNum == 0)
+			{
+				if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select Config from dbo.Nodes where Id = " + NodeId, ref tmp);
+
+				List<string[]> tmp2 = new List<string[]>();
+				ParseNodeConfig(ref tmp2, tmp[0][0]);
+				foreach (string[] s in tmp2)
+				{
+					if (IsDeviceTypeLongRangeRFIDById(s[0]))
+					{
+						rslt += "🔍";
+					}
+				}
+			}
+			else
+			{
+				rslt = "";
+			}
+			return rslt;
+		}
+
+		private void ParseNodeConfig(ref List<string[]> lst, string NodeConfig)
+		{
+			lst.Clear();
+			string find = "\"DeviceId\":";
+			int c = 0;
+			int n = 0;
+			string nums = "0123456789";
+			//
+			string s = "";
+			n = NodeConfig.IndexOf(find, n);
+			//
+			if (n < find.Length + 5)
+			{
+				return;
+			}
+			//
+			string sc = "";
+			try
+			{
+				do
+				{
+					s = "";
+					for (int i = n + find.Length; i < n + 20; i++)
+					{
+						sc += NodeConfig.Substring(i, 1);
+						if (nums.Contains(NodeConfig.Substring(i, 1)))
+						{
+							s += NodeConfig.Substring(i, 1);
+						}
+						else
+						{
+							break;
+						}
+					}
+					sc += "\r\n";
+					lst.Add(new string[] { s, GetDeviceNameById(s) });
+					n = NodeConfig.IndexOf(find, n + find.Length);
+					//
+					c++;
+					//if (c > 50) { /* return new string[] { "Error (50 спроб...)" }.ToList(); */ }
+					if (c > 50) { log.Add("ParseNodeConfig: Error: (50 спроб...)"); }
+				} while (n > -1);
+			}
+			catch (Exception ex)
+			{
+				log.Add("ParseNodeConfig: Error: " + ex.ToString());
+			}
+		}
+
+		private string GetDeviceNameById(string Id)
+		{
+			List<string[]> tmp = new List<string[]>();
+			db.GetDataFromDBMSSQL(" select Name from dbo.Devices where Id = '" + Id + "'", ref tmp);
+			return tmp.Count > 0 ? tmp[0][0] : "Wrong device Id...";
+		}
+
+		private bool IsDeviceTypeLongRangeRFIDById(string DeviceId)
+		{
+			List<string[]> tmp = new List<string[]>();
+			db.GetDataFromDBMSSQL("select Typeid from dbo.Devices where Id = '" + DeviceId + "'", ref tmp);
+			if (tmp.Count > 0)
+			{
+				if (tmp[0][0] == "2" || tmp[0][0] == "31")
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private string GetNodeName(string NodeId, bool FindRfid = false)
+		{
+
 			if (NodeId == "") return "#";
 			List<string[]> tmp = new List<string[]>();
+			List<string[]> tmp2 = new List<string[]>();
 			if (db.EnterpriseNum == 0) db.GetDataFromDBMSSQL("select Name from dbo.Nodes where Id = " + NodeId, ref tmp);
 			if (db.EnterpriseNum == 1) db.GetDataFromDBMSSQL("select Name from dbo.Node where Id = " + NodeId, ref tmp);
+
 			return tmp[0][0];
 		}
 
@@ -247,7 +382,8 @@ namespace Gravitas.Monitoring.Pages
 			if (tc == "") return "";
 			List<string> tmpT = GetTList(tc);
 			CarProgress.Clear();
-			CarProgress.Add(new string[] { "Id", "StateId", "NodeId", "CheckInDateTime", "CheckOutDateTime", "Інше", "Інше", "Інше", "Інше" });
+			//CarProgress.Add(new string[] { "Id", "StateId", "NodeId", "CheckInDateTime", "CheckOutDateTime", "Інше", "Інше", "Інше", "Інше" });
+			CarProgress.Add(new string[] { "Тип вузла", "Стан", "Вузол", "Початок обробки", "Кінець обробки", "Інше", "Інше", "Інше", "Інше" });
 
 			foreach (string s in tmpT)
 			{
@@ -275,10 +411,10 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.SecurityCheckInOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.SecurityCheckInOpData";
-					CarProgress.Add(new string[] { TableName, "КПП Заїзд" });
+					//CarProgress.Add(new string[] { TableName, "КПП Заїзд" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						CarProgress.Add(new string[] { "КПП Заїзд", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\" style=\"white-space: nowrap;\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 				//---------------------------------------------- Vizir / Lab
@@ -290,10 +426,11 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.LabFacelessOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.LabFacelessOpData";
-					CarProgress.Add(new string[] { TableName, "Візіровка", "", "", "", "Засміченість", "Вологість", "П/М", "Коментар" });
+					//CarProgress.Add(new string[] { TableName, "Візіровка", "", "", "", "Засміченість", "Вологість", "П/М", "Коментар" });
+					CarProgress.Add(new string[] { "", "", "", "", "", "Засміченість", "Вологість", "П/М", "Коментар" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], s[5], s[6], s[7], s[8] });
+						CarProgress.Add(new string[] { "Візіровка", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], s[5], s[6], s[7], s[8] });
 					}
 				}
 				//---------------------------------------------- Vagi
@@ -305,14 +442,16 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.ScaleOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.ScaleOpData";
-					CarProgress.Add(new string[] { TableName, "Ваги", "", "", "", "Тип", "Вага Авто", "Вага причепа" });
+					//CarProgress.Add(new string[] { TableName, "Ваги", "", "", "", "Тип", "Вага Авто", "Вага причепа" });
+					CarProgress.Add(new string[] { "", "", "", "", "", "Тип", "Вага Авто", "Вага причепа" });
 					string TareOrGross = "HZ";
 					foreach (string[] s in tmp)
 					{
 						TareOrGross = "HZ";
 						if (s[5] == "1") TareOrGross = "Тара";
 						if (s[5] == "2") TareOrGross = "Бруто";
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], TareOrGross, s[6], s[7] });
+						//CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], TareOrGross, s[6], s[7] });
+						CarProgress.Add(new string[] { "Ваги", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], TareOrGross, s[6], s[7] });
 					}
 				}
 				//---------------------------------------------- UnloadGuideOpDatas
@@ -324,10 +463,11 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.UnloadGuideOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.UnloadGuideOpData";
-					CarProgress.Add(new string[] { TableName, "Призн... розвантаження", "", "", "", "Вибрана точка розвантаження" });
+					//CarProgress.Add(new string[] { TableName, "Призн... розвантаження", "", "", "", "Вибрана точка розвантаження" });
+					CarProgress.Add(new string[] { "", "", "", "", "", "Вибрана точка розвантаження" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], GetNodeName(s[5]) });
+						CarProgress.Add(new string[] { "Призначення розвантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], GetNodeName(s[5]) });
 					}
 				}
 				//---------------------------------------------- UnloadPointOpDatas
@@ -339,10 +479,10 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.UnloadPointOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.UnloadPointOpData";
-					CarProgress.Add(new string[] { TableName, "Точка розвантаження" });
+					//CarProgress.Add(new string[] { TableName, "Точка розвантаження" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						CarProgress.Add(new string[] { "Точка розвантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 				//---------------------------------------------- LoadGuideOpDatas
@@ -354,10 +494,11 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.LoadGuideOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.LoadGuideOpData";
-					CarProgress.Add(new string[] { TableName, "Призн... Завантаження", "", "", "", "Вибрана точка завантаження" });
+					//CarProgress.Add(new string[] { TableName, "Призн... Завантаження", "", "", "", "Вибрана точка завантаження" });
+					CarProgress.Add(new string[] { "", "", "", "", "", "Вибрана точка завантаження" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], GetNodeName(s[5]) });
+						CarProgress.Add(new string[] { "Призначення завантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], GetNodeName(s[5]) });
 					}
 				}
 				//---------------------------------------------- LoadPointOpDatas
@@ -369,11 +510,12 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.LoadPointOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.LoadPointOpData";
-					CarProgress.Add(new string[] { TableName, "Точка завантаження", "", "", "", "Силоси" });
+					//CarProgress.Add(new string[] { TableName, "Точка завантаження", "", "", "", "Силоси" });
+					CarProgress.Add(new string[] { "", "", "", "", "", "Силоси" });
 					foreach (string[] s in tmp)
 					{
-						if (db.EnterpriseNum == 0) CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], (string.IsNullOrEmpty(s[5]) ? "###" : s[5]) });
-						if (db.EnterpriseNum == 1) CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						if (db.EnterpriseNum == 0) CarProgress.Add(new string[] { "Точка завантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], (string.IsNullOrEmpty(s[5]) ? "###" : s[5]) });
+						if (db.EnterpriseNum == 1) CarProgress.Add(new string[] { "Точка завантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 				//---------------------------------------------- CentralLabOpDatas
@@ -385,10 +527,10 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.CentralLabOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.CentralLabOpData";
-					CarProgress.Add(new string[] { TableName, "Центр... лабораторія" });
+					//CarProgress.Add(new string[] { TableName, "Центр... лабораторія" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						CarProgress.Add(new string[] { "Центр... лабораторія", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 				//---------------------------------------------- CheckPointOpDatas
@@ -402,10 +544,10 @@ namespace Gravitas.Monitoring.Pages
 					{
 						if (db.EnterpriseNum == 0) TableName = "dbo.CheckPointOpDatas";
 						if (db.EnterpriseNum == 1) TableName = "opd.CheckPointOpData";
-						CarProgress.Add(new string[] { TableName, "Чепоінти..." });
+						//CarProgress.Add(new string[] { TableName, "Чепоінти..." });
 						foreach (string[] s in tmp)
 						{
-							CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+							CarProgress.Add(new string[] { "Чепоінти", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 						}
 					}
 				}
@@ -419,10 +561,10 @@ namespace Gravitas.Monitoring.Pages
 					if (tmp.Count > 0)
 					{
 						TableName = "dbo.PayOfficeOpDatas";
-						CarProgress.Add(new string[] { TableName, "Каса" });
+						//CarProgress.Add(new string[] { TableName, "Каса" });
 						foreach (string[] s in tmp)
 						{
-							CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+							CarProgress.Add(new string[] { "Каса", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 						}
 					}
 				}
@@ -435,10 +577,10 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (db.EnterpriseNum == 0) TableName = "dbo.SecurityCheckOutOpDatas";
 					if (db.EnterpriseNum == 1) TableName = "opd.SecurityCheckOutOpData";
-					CarProgress.Add(new string[] { TableName, "КПП Виїзд" });
+					//CarProgress.Add(new string[] { TableName, "КПП Виїзд" });
 					foreach (string[] s in tmp)
 					{
-						CarProgress.Add(new string[] { s[0], "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
+						CarProgress.Add(new string[] { "КПП Виїзд", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}
 			}

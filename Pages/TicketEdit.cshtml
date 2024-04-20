@@ -15,24 +15,20 @@
 			<input type="hidden" asp-for=TC />
 			<div class="row">
 				<div class="col-3">
-
-					В полях <b>RouteTemplateId</b> та <b>SecondaryRouteTemplateId</b> вказується Id маршрута
-					<br />
-					<br />
-					В полях <b>RouteItemIndex</b> та <b>SecondaryRouteItemIndex</b> вказується номер останньої пройденої точки на маршруті
+					Додатковий маршрут використовується системою при обробці не стандартних ситуацій: перегруз, недогруз, погодження і т.ін.
 				</div>
 				<div class="col-3">
-					<label style="width: 100%;">StatusId<br /><input type="number" asp-for="SI" class="form-control" /></label>
-					<label style="width: 100%;">RouteTemplateId<br /><input type="number" asp-for="RTI" class="form-control" /></label>
-					<label style="width: 100%;">RouteItemIndex<br /><input type="number" asp-for="RII" class="form-control" /></label>
+					<label style="width: 100%;">Статус авто<br /><input type="number" asp-for="SI" class="form-control" /></label>
+					<label style="width: 100%;">Id Маршруту<br /><input type="number" asp-for="RTI" class="form-control" /></label>
+					<label style="width: 100%;">Номер пройденого етапу<br /><input type="number" asp-for="RII" class="form-control" /></label>
 				</div>
 				<div class="col-3">
-					<label style="width: 100%;">SecondaryRouteTemplateId<br /><input type="number" asp-for="SRTI" class="form-control" /></label>
-					<label style="width: 100%;">SecondaryRouteItemIndex<br /><input type="number" asp-for="SRII" class="form-control" /></label>
+					<label style="width: 100%;">Id Додаткового маршруту<br /><input type="number" asp-for="SRTI" class="form-control" /></label>
+					<label style="width: 100%;">Номер пройденого етапу в доп. маршруті<br /><input type="number" asp-for="SRII" class="form-control" /></label>
 				</div>
 				<div class="col-3">
 
-					<h4>StatusId:</h4>
+					<h4>Статус авто:</h4>
 					1. Бланк(новий)<br />
 					2. В обробці<br />
 					3. Доопрацювання<br />
