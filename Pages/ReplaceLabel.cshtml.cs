@@ -33,6 +33,7 @@ namespace Gravitas.Monitoring.Pages
 		{
 
 			tc = HttpContext.Request.Query["tc"].ToString();
+			CurAntenna = HttpContext.Request.Query["AntennaId"].ToString();
 			MakeAntennaList();
 
 			List<string[]> tmp = new List<string[]>();

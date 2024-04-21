@@ -29,13 +29,14 @@ namespace Gravitas.Monitoring.Pages
 		public bool FrCarProgress { get; set; } = true;
 		[BindProperty]
 		public List<string[]> TicketsList { get; set; } = new List<string[]>();
-
 		[BindProperty]
 		public string CurFeed { get; set; } = "";
 		[BindProperty]
 		public string CurCarNo { get; set; } = "";
 		[BindProperty]
 		public string CurTrailerNo { get; set; } = "";
+		[BindProperty]
+		public bool ShowLongRangeFlag { get; set; } = false;
 
 		//##################################################################################################################################
 
@@ -59,6 +60,16 @@ namespace Gravitas.Monitoring.Pages
 		public void OnGet()
 		{
 			tc = HttpContext.Request.Query["tc"].ToString();
+			DoIt();
+		}
+
+		public void OnPost()
+		{
+			DoIt();
+		}
+
+		private void DoIt()
+		{
 			CurTC = tc;
 			GetCrInfo();
 			try
@@ -232,6 +243,10 @@ namespace Gravitas.Monitoring.Pages
 		private string LongRangeRFID(string NodeId)
 		{
 			string rslt = "";
+			if (!ShowLongRangeFlag)
+			{
+				return "";
+			}
 			List<string[]> tmp = new List<string[]>();
 			if (db.EnterpriseNum == 0)
 			{
@@ -243,7 +258,7 @@ namespace Gravitas.Monitoring.Pages
 				{
 					if (IsDeviceTypeLongRangeRFIDById(s[0]))
 					{
-						rslt += "🔍";
+						rslt += "<a href=\"./ReplaceLabel?tc=" + tc + "&AntennaId=" + s[0] +"\" style=\"btn btn-primary\">🛜</a>";
 					}
 				}
 			}

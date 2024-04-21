@@ -14,10 +14,12 @@
 		<a href="./Replacelabel?tc=@Model.CurTC" class="btn btn-primary w-100">🔍 Пошук міток</a>
 	</div>
 	<div class="col-3">
-		<a href="./OneCTest?tc=@Model.CurTC" class="btn btn-primary w-100">Дані по авто з 1C (до 10с)</a>
+		<a href="./OneCTest?tc=@Model.CurTC" class="btn btn-primary w-100">Дані по авто з 1C (~10с)</a>
 	</div>
 	<div class="col-3">
-		<h4>TicketContainerId: <b>@Model.tc</b></h4>
+		<h5 class="w-100" style="text-align:center; vertical-align:middle; height:38px; border: 1px solid #ccc; border-radius: 3px; background-color: #fdb; cursor:default;">
+			TicketContainerId: <b>@Model.tc</b>
+		</h5>
 	</div>
 </div>
 <br />
@@ -56,6 +58,25 @@
 				{
 					<tr><td class="brdr1sb">@rs[0]</td><td class="brdr1sb">@Html.Raw(rs[1])</td></tr>
 				}
+			}
+			@if (!Model.ShowLongRangeFlag)
+			{
+				<tr>
+					<td colspan="2">
+						<center>
+							<form method="post">
+								<input type="hidden" asp-for="ShowLongRangeFlag" value="true" />
+								<input type="hidden" asp-for="tc" />
+								<button type="submit" class="btn btn-primary mt-1">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-broadcast-pin" viewBox="0 0 16 16">
+										<path d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707m2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708m5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708m2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8" />
+									</svg>
+									Показати антени (~10c)
+								</button>
+							</form>
+						</center>
+					</td>
+				</tr>
 			}
 		</table>
 

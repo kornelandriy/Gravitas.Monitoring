@@ -26,13 +26,24 @@
 			<label asp-for="CarNum" class="control-label">№ Авто</label><input type="text" asp-for="CarNum" class="form-control w-100" />
 		</div>
 		<div class="col-2">
-			<label asp-for="FindTC" class="control-label">TicketContainerId</label><input style="background-color: antiquewhite;" type="number" asp-for="FindTC" class="form-control w-100" />
-			<p>Якщо не пусте то ігнорує всі фільтри</p>
+			<label asp-for="FindTC" class="control-label">TicketContainerId</label><input type="number" asp-for="FindTC" class="form-control w-100" />
+			<p style="text-align:center; margin-top: 3px; border: 1px solid #ccc; background-color: #fdb; border-radius: 3px;" >Ігнорує всі фільтри</p>
 		</div>
 		<div class="col-2">
-			<a href="./" class="btn btn-primary w-100 m-1">⏪ Назад до панелі</a>
+			<a href="./" class="btn btn-primary w-100 m-1">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+				</svg>
+				Назад до панелі
+			</a>
 			<br />
-			<input type="submit" value="🔍 Знайти" class="btn btn-success w-100 m-1" />
+
+			<button type="submit" class="btn btn-success w-100 m-1">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+				</svg>
+				Знайти
+			</button>
 		</div>
 	</div>
 </form>
@@ -47,48 +58,159 @@
 		<p>Нічого не знайдено</p>
 	}
 </div>
+
+
+@foreach (string[] s in Model.lstData)
+{
+	<div class="row yozhstyle1" style="font-size: 14pt; background-color: #eee">
+		<div class="col-6">
+			<div>
+				<div class="m-1">
+					Картка
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@if (string.IsNullOrEmpty(s[0]))
+					{
+						@Html.Raw("ND")
+					}
+					else
+					{
+						@s[0]
+					}
+				</div>
+				<div class="m-1">
+					Номенклатура
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[3]
+				</div>
+				<div class="m-1">
+					Маршрут
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[4]
+				</div>
+				<div class="m-1">
+					Вікно
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[1]
+				</div>
+				<div class="m-1">
+					Тікет контейнер
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[7]
+				</div>
+				<div class="m-1">
+					Етап
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[10]
+				</div>
+			</div>
+		</div>
+		<div class="col-6">
+			<div>
+				<div class="m-1">
+					Авто
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[2]
+				</div>
+				<div class="m-1">
+					Тікетів
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[6]
+				</div>
+				<div class="m-1">
+					Стан
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[5]
+				</div>
+				<div class="m-1">
+					Реєстрація
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[8]
+				</div>
+				<div class="m-1">
+					Виїзд
+				</div>
+				<div class="m-1" style="background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+					@s[9]
+				</div>
+				<div class="row">
+					<div class="col-8">
+					</div>
+					<div class="col-4">
+						<form method="get" action="CarInfo">
+							<input type="hidden" name="tc" value=@s[7] />
+							<button type="submit" class="btn btn-primary w-100" title="Перейти до інформації по авто" style="margin-top: 5px;">
+								<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8" />
+								</svg>
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br />
+	<br />
+}
+@*
+
 @foreach (string[] s in Model.lstData)
 {
 	<br />
-	<table class="yozhstyle1" style="display: inline-block; margin-top: 5px;">
+	<table class="brdr1sb" style="margin-top: 5px; width: 100%; border-collapse: collapse;">
 		<tr>
 			<td class="brdr1sb headercolor">Картка (Тікетів)</td>
-			<td class="brdr1sb">@s[0] (@s[6])</td>
+			<td class="brdr1sb">0 @s[0] (6 @s[6])</td>
 			<td class="brdr1sb headercolor">Авто</td>
-			<td class="brdr1sb">@s[2]</td>
+			<td class="brdr1sb">2 @s[2]</td>
 			<td rowspan="6" class="brdr1sb">
 				<form method="get" action="CarInfo">
 					<input type="hidden" name="tc" value=@s[7] />
-					<button type="submit" class="btn btn-primary" title="Перейти до інформації по авто">⏩</button>
+					<button type="submit" class="btn btn-primary" title="Перейти до інформації по авто">7
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+							<path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8" />
+						</svg>
+					</button>
 				</form>
 			</td>
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">Номенклатура</td>
-			<td colspan="3" class="brdr1sb">@s[3]</td>
+			<td colspan="3" class="brdr1sb">3 @s[3]</td>
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">Маршрут</td>
-			<td colspan="3" class="brdr1sb">@s[4]</td>
+			<td colspan="3" class="brdr1sb">4 @s[4]</td>
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">Вікно</td>
-			<td class="brdr1sb">@s[1]</td>
+			<td class="brdr1sb">1 @s[1]</td>
 			<td class="brdr1sb headercolor">Стан</td>
-			<td class="brdr1sb">@s[5]</td>
+			<td class="brdr1sb">5 @s[5]</td>
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">ТікетКонтейнер</td>
-			<td class="brdr1sb">@s[7]</td>
+			<td class="brdr1sb">7 @s[7]</td>
 			<td class="brdr1sb headercolor">Етап</td>
-			<td class="brdr1sb">@s[10]</td>
+			<td class="brdr1sb">10 @s[10]</td>
 
 		</tr>
 		<tr>
 			<td class="brdr1sb headercolor">Реєстрація</td>
-			<td class="brdr1sb">@s[8]</td>
+			<td class="brdr1sb">8 @s[8]</td>
 			<td class="brdr1sb headercolor">Виїзд</td>
-			<td class="brdr1sb">@s[9]</td>
+			<td class="brdr1sb">9 @s[9]</td>
 		</tr>
 	</table>
 }
+*@

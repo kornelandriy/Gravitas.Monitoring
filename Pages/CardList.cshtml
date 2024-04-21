@@ -4,12 +4,15 @@
 @{
 
 }
+<center>
+	<h3>Налаштування фільтру реєстру карток і міток які зареєстровані в системі</h3>
+</center>
 <form method="post">
 	<div class="row yozhstyle1 mt-1">
 		<div class="col-3">
 			<h3>Тип картки</h3>
 			<fieldset>
-				<label style="padding-right: 7px;"><input type="radio" asp-for=CardType value="1" />  1 - Користувач</label>
+				<label style="padding-right: 7px;"><input type="radio" asp-for="CardType" value="1" />  1 - Користувач</label>
 				<br />
 				<label style="padding-right: 7px;"><input type="radio" asp-for="CardType" value="2" />  2 - Водій</label>
 				<br />
@@ -24,48 +27,71 @@
 				<label style="padding-right: 7px;"><input type="radio" asp-for="FindType" value="1" />  Номер</label>
 				<br />
 				<label style="padding-right: 7px;"><input type="radio" asp-for="FindType" value="2" />  Ідентифікатор</label>
+				<p class="brdr1sb" style="background-color:#fdd; border-radius:5px;">Пошук по ідентифікатору<br />ігнорує тип картки</p>
 			</fieldset>
 		</div>
 		<div class="col-3">
 			<h3>Фільтр</h3>
-			<input class="form-control" type="text" name="FindWhat" value="@Model.FindWhat" placeholder="NULL" />
+			<input class="form-control" type="text" name="FindWhat" value="@Model.FindWhat" />
 		</div>
 		<div class="col-3">
-			<a href="./" class="btn btn-primary w-100">⏪ Назад до панелі</a><br />
+			<a href="./" class="btn btn-primary w-100">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+				</svg>
+				Назад до панелі
+			</a><br />
 			<br />
-			<button class="btn btn-success w-100">🔍 Знайти</button>
+			<button class="btn btn-success w-100">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+				</svg>
+				Знайти
+			</button>
 		</div>
 	</div>
 </form>
-	Пошук по ідентифікатору ігнорує тип картки
-<br />
+
 <br />
 @Model.Cards.Count
 <br />
-<table class="yozhstyle1" style="display: inline-block;">
-	<tr style="text-align:center;">
-		<th class="brdr1sb headercolor">Ідентифікатор</th>
-		<th class="brdr1sb headercolor">Номер</th>
-		<th class="brdr1sb headercolor">Стан</th>
-		<th class="brdr1sb headercolor">Тікет контейнер</th>
-		<th class="brdr1sb headercolor">Користувач</th>
-		<th class="brdr1sb headercolor">✏️</th>
-	</tr>
-	@if (Model.Cards.Count == 0)
-	{
-		<tr><td colspan="5">Нічого не знайдено...</td></tr>
-	}
-	@foreach (string[] s in Model.Cards)
-	{
-		<tr>
-			<td class="brdr1sb">@s[0]</td>
-			<td class="brdr1sb">@s[1]</td>
-			<td class="brdr1sb">@s[2]</td>
-			<td class="brdr1sb">@s[3]</td>
-			<td class="brdr1sb">@s[4]</td>
-			<td><a class="btn btn-primary" href="./CardInfo?CardId=@s[0]">✏️</a></td>
-		</tr>
-	}
-</table>
-
-
+@if (Model.Cards.Count > 0)
+{
+	<center>
+		<table class="yozhstyle1" style="display: inline-block;">
+			<tr style="text-align:center;">
+				<th class="brdr1sb headercolor">Ідентифікатор</th>
+				<th class="brdr1sb headercolor">Номер</th>
+				<th class="brdr1sb headercolor">Стан</th>
+				<th class="brdr1sb headercolor">Тікет контейнер</th>
+				<th class="brdr1sb headercolor">Користувач</th>
+				<th class="brdr1sb headercolor">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+						<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
+					</svg>
+				</th>
+			</tr>
+			@if (Model.Cards.Count == 0)
+			{
+				<tr><td colspan="5">Нічого не знайдено...</td></tr>
+			}
+			@foreach (string[] s in Model.Cards)
+			{
+				<tr>
+					<td class="brdr1sb">@s[0]</td>
+					<td class="brdr1sb">@s[1]</td>
+					<td class="brdr1sb">@s[2]</td>
+					<td class="brdr1sb">@s[3]</td>
+					<td class="brdr1sb">@s[4]</td>
+					<td>
+						<a class="btn btn-primary" href="./CardInfo?CardId=@s[0]">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+								<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
+							</svg>
+						</a>
+					</td>
+				</tr>
+			}
+		</table>
+	</center>
+}
