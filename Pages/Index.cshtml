@@ -5,15 +5,19 @@
 @{
 	ViewData["Title"] = "Home page";
 	string Groups = "";
-	bool a = false;
-	bool m = false;
-	bool u = false;
+	bool a = false; // admin
+	bool m = false; // modifier
+	bool u = false; // user
 	//<a href="./ApUsers">Users</a><br />
 	//<iframe src="https://alerts.in.ua/?embed" style="width: 500px; height: 300px; border: none;" title="Мапа повітряних тривог" frameborder="0"></iframe>
 }
 
 
 <div class="text-center">
+	@*
+	<h1 class="display-3" style="color: #0f3d5c; text-shadow: 5px 5px 10px #777, 0px 0px 3px #777; font-weight: 500;">
+	<h1 class="display-3" style="color: #0f3d5c; text-shadow: 5px 5px 10px #777; font-weight: 500;">
+	*@
 	<h1 class="display-3" style="color: #e9e9e9; text-shadow: 5px 5px 10px #777, 0px 0px 3px #777; font-weight: 500;">
 		<b>
 			Вузол обслуговування системи внутрішньозаводської логістики МЗВКК
@@ -104,9 +108,8 @@
 </div>
 @if (SignInManager.IsSignedIn(User))
 {
-	<br />
 	<center>
-		<div style="margin-top: 100px;">
+		<div style="margin-top: 40px;">
 			<table class="yozhstyle1" style="display:inline-block;">
 				<tr>
 					<td class="brdr1sb headercolor">
