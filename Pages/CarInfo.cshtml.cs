@@ -529,7 +529,7 @@ namespace Gravitas.Monitoring.Pages
 					CarProgress.Add(new string[] { "", "", "", "", "", "Силоси" });
 					foreach (string[] s in tmp)
 					{
-						if (db.EnterpriseNum == 0) CarProgress.Add(new string[] { "Точка завантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], (string.IsNullOrEmpty(s[5]) ? "###" : s[5]) });
+						if (db.EnterpriseNum == 0) CarProgress.Add(new string[] { "Точка завантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4], (string.IsNullOrEmpty(s[5]) ? "###" + s[0] : s[5]) });
 						if (db.EnterpriseNum == 1) CarProgress.Add(new string[] { "Точка завантаження", "<a href=\"./ChangeStateId?id=" + s[0] + "&StateId=" + s[1] + "&tc=" + CurTC + "&TableName=" + TableName + "&NodeName=" + GetNodeName(s[2]) + "\" class=\"btn btn-primary\">" + GetNodeStatus(s[1]) + "</a>", GetNodeName(s[2]), s[3], s[4] });
 					}
 				}

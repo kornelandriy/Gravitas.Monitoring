@@ -11,6 +11,7 @@ namespace Gravitas.Monitoring.HelpClasses
 		public static int EnterpriseNum = 0; // 0 - MZVKK     1 - KE
 
 		public static string[] DBConnStr = new string[] { "server=10.9.176.98;user=sa;database=mhp;password=Qq123123123;TrustServerCertificate=True;", "server=10.9.176.85;user=sa;database=mhp;password=wu*o8Ewediel;TrustServerCertificate=True;" };
+		public static string DBUsersConnStr = "server=10.9.176.98;user=sa;database=monitoring;password=Qq123123123;TrustServerCertificate=True;";
 
 		public static void GetTableHeaders2(string TableName, ref List<string> lst)
 		{
@@ -149,6 +150,39 @@ namespace Gravitas.Monitoring.HelpClasses
 			try
 			{
 				SqlConnection _conn = new SqlConnection(DBConnStr[EnterpriseNum]);
+				_conn.Open();
+
+				using (SqlCommand mysqlcmd = new SqlCommand(sql, _conn))
+				{
+					mysqlcmd.ExecuteNonQuery();
+				}
+				_conn.Close();
+				//log.Add("SendRequestToDB: Done");
+
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("SendRequestToDB Error: " + ex.ToString());
+				log.Add("SendRequestToDB: Error: " + ex.ToString());
+			}
+		}
+
+
+		/// <summary>
+		/// відправляє запити MySQL серверу
+		/// Приклад: long n = SendRequestToDB("insert into table_name (column_name) values ('value')");
+		/// </summary>
+		/// <param name="sql">SQL запит</param>
+		/// <returns>Повертає id доданого запису або 0 у випадку помилки</returns>
+		public static void SendRequestToDB(string ConnStr, string sql)
+		{
+			//MessageBox.Show(sql);
+			//Console.WriteLine("SendRequestToDB: " + sql);
+			//log.Add("SendRequestToDB: SQL: " + sql);
+			if (sql.Length == 0) return;
+			try
+			{
+				SqlConnection _conn = new SqlConnection(ConnStr);
 				_conn.Open();
 
 				using (SqlCommand mysqlcmd = new SqlCommand(sql, _conn))

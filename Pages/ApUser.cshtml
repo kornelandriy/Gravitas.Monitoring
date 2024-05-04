@@ -1,0 +1,71 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.ApUserModel
+@using Gravitas.Monitoring.Constants
+@inject SignInManager<IdentityUser> SignInManager
+@{
+	ViewData["Title"] = "Користувач";
+}
+<br />
+<div class="row yozhstyle1">
+	<div class="col-4">
+		<h2>Ролі користувача</h2>
+	</div>
+	<div class="col-8">
+		<h3>@Model.UserName</h3>
+	</div>
+</div>
+<br />
+<form method="post">
+	<input type="hidden" asp-for="UserId" />
+	<div class="row yozhstyle1">
+		<div class="col-2">
+			<a href="./ApUsers" class="btn btn-primary w-100">⏪ Назад</a>
+		</div>
+		<div class="col-2">
+		</div>
+		<div class="col-2">
+			<label style="font-size: 16pt;">
+				<input style="width: 16px; height: 16px;" type="checkbox" asp-for="a" /> Адміністратор
+			</label>
+		</div>
+		<div class="col-2">
+			<label style="font-size: 16pt;">
+				<input style="width: 16px; height: 16px;" type="checkbox" asp-for="m" /> Редактор
+			</label>
+		</div>
+		<div class="col-2">
+			<label style="font-size: 16pt;">
+				<input style="width: 16px; height: 16px;" type="checkbox" asp-for="u" /> Користувач
+			</label>
+		</div>
+		<div class="col-2">
+			@if (SignInManager.IsSignedIn(User))
+			{
+				@if (User.IsInRole(UserRoles.Admin))
+				{
+					<button type="submit" class="btn btn-primary w-100">💾 Зберегти</button>
+				}
+				else
+				{
+					<div class="brdr1sb w-100">
+						Змінювати ьоже лише Адміністратор
+					</div>
+				}
+			}
+			else
+			{
+				<div class="brdr1sb w-100">
+					Змінювати ьоже лише Адміністратор
+				</div>
+			}
+
+		</div>
+	</div>
+</form>
+<br />
+<br />
+<br />
+@Html.Raw(Model.Result)
+
+
+

@@ -1,0 +1,98 @@
+﻿@page
+@model Gravitas.Monitoring.Pages.QueueModel
+@{
+	//qList.Count = @Model.qList.Count
+}
+
+<div class="row">
+	<div class="col-2">
+		<a href="./" class="btn btn-primary w-100 m-1">
+			<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+			</svg>
+			Назад до панелі
+		</a>
+	</div>
+	<div class="col-8" style="font-size: 26pt; font-weight:700;">
+		<center>
+			Черга
+		</center>
+	</div>
+	<div class="col-2">
+	</div>
+</div>
+<b>
+	<div class="row yozhstyle1" style="margin-bottom:15px; margin-top:5px; background-color: #eee;">
+		<div class="col-1" style="text-align:center;">Тікет Контейнер</div>
+		<div class="col-1" style="text-align:center;">Реєстрація</div>
+		<div class="col-1" style="text-align:center;">Авто</div>
+		<div class="col-1" style="text-align:center;">Телефон</div>
+		<div class="col-1" style="text-align:center;">Дозвіл на в'їзд</div>
+		<div class="col-1" style="text-align:center;">SMS відправлено?</div>
+		<div class="col-1" style="text-align:center;">SMS<br />дата і час</div>
+		<div class="col-4" style="text-align:center;">Маршрут</div>
+		<div class="col-1" style="text-align:center;"></div>
+	</div>
+</b>
+@if (Model.qList.Count > 0)
+{
+	<div>Знайдено @Model.qList.Count авто</div>
+}
+else
+{
+	<div>В черзі авто не знайдено</div>
+}
+Result: @Model.Result
+@foreach (string[] s in Model.qList)
+{
+	<div class="row yozhstyle1" style="margin-bottom:15px;">
+		<div class="col-1" style="text-align:center;">(@s[8])<br />@s[0]</div>
+		<div class="col-1" style="text-align:center;">@s[1]</div>
+		<div class="col-1" style="text-align:center;">@s[2]</div>
+		<div class="col-1" style="text-align:center;">@s[3]</div>
+		<div class="col-1" style="text-align:center;">
+			@if (s[4] == "True")
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-check-square" style="fill:lime" viewBox="0 0 16 16">
+					<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+					<path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+				</svg>
+			}
+			else
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-square" style="fill:red" viewBox="0 0 16 16">
+					<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+				</svg>
+			}
+		</div>
+		<div class="col-1" style="text-align:center;">
+			@if (s[5] == "True")
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-check-square" style="fill:lime" viewBox="0 0 16 16">
+					<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+					<path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+				</svg>
+			}
+			else
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-square" style="fill:red" viewBox="0 0 16 16">
+					<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+				</svg>
+			}
+		</div>
+		<div class="col-1" style="text-align:center;">@s[6]</div>
+		<div class="col-4">@s[7]</div>
+		<div class="col-1">
+			@if (s[4] != "True" && s[4] != "True")
+			{
+				<form method="post">
+					<input type="hidden" asp-for="qId" value="@s[8]" />
+					<button type="submit" class="btn btn-primary w-100">Виклик</button>
+				</form>
+			}
+		</div>
+	</div>
+}
+

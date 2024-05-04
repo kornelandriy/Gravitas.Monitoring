@@ -15,13 +15,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 
-var MZIKKconnString = builder.Configuration.GetConnectionString("MZIKKDB") ?? throw new InvalidOperationException("Connection string 'MZIKKDB' not found.");
-builder.Services.AddDbContext<MzvkkDbContext>(options => options.UseSqlServer(MZIKKconnString));
-
-
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
 
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
@@ -42,9 +36,6 @@ using (var scope = app.Services.CreateScope())
 
     var context = services.GetRequiredService<ApplicationDbContext>();
     context.Database.Migrate();
-
-    var context2 = services.GetRequiredService<MzvkkDbContext>();
-    context2.Database.Migrate();
 
     await SeedData.Initialize(services);
 }

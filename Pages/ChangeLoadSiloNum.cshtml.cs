@@ -1,6 +1,7 @@
 using Gravitas.Monitoring.HelpClasses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Gravitas.Monitoring.Pages
 {
@@ -36,6 +37,8 @@ namespace Gravitas.Monitoring.Pages
 				try
 				{
 					db.SendRequestToDB("update dbo.LoadPointOpDatas set LoadSiloNames='" + Siloes + "' where Id = '" + id + "'");
+					//Result = "update dbo.LoadPointOpDatas set LoadSiloNames='" + Siloes + "' where Id = '" + id + "'";
+					//Result = "Siloes = [" + Siloes + "]      Id = [" + id + "]";
 					Result = "«бережено...";
 				}
 				catch (Exception ex)

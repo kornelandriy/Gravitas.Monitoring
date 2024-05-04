@@ -1,2 +1,3 @@
-﻿Roles...
+﻿Roles... ~ 70%
+ЧЕРГА!!! ~ 0%
 Change device names in DB ~ 5%
