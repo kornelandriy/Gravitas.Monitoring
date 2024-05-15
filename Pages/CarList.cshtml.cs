@@ -76,7 +76,7 @@ namespace Gravitas.Monitoring.Pages
 
 			DateTime dt = fDate;
 			DateTime dt2 = dt;
-			DateTime dt1 = dt.AddDays(-1); // Доробить 1 або 2 доби...
+			DateTime dt1 = fOneDay ? dt : dt.AddDays(-1); // Доробить 1 або 2 доби...
 
 			int d = dt1.Day;
 			int m = dt1.Month;
